@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -10,7 +12,13 @@ import { LevelsModule } from './levels/levels.module';
       isGlobal: true,  // Hace accesibles las variables de entorno en toda la app
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule,
+        JwtModule.register({
+          global: true,
+          secret: process.env.JWT_SECRET,
+          signOptions: {expiresIn: '5h'},
+        })
+      ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -26,6 +34,7 @@ import { LevelsModule } from './levels/levels.module';
     }),
     RoutinesModule,
     LevelsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
