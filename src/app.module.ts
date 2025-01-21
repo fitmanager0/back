@@ -1,23 +1,28 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: 'localhost',
-    //   port: 5432,
-    //   username: 'tu_usuario',
-    //   password: 'tu_contraseña',
-    //   database: 'tu_base_de_datos',
-    //   autoLoadEntities: true,
-    //   synchronize: true, 
-    // }),
-    // TypeOrmModule.forFeature(),
+    ConfigModule.forRoot({
+      isGlobal: true,  // Hace accesibles las variables de entorno en toda la app
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true, 
+        synchronize: true, // Solo para desarrollo, no usar en producción
+      }),
+    }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
