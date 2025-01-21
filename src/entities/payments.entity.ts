@@ -26,7 +26,7 @@ export class Payment {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'id_user' })
-  id_user: User;
+  user: User;
 
   @ApiProperty({
     description: 'Fecha en la que se realizó el pago',
