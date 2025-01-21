@@ -40,7 +40,7 @@ export class User {
     description: 'Contraseña del usuario. Campo de tipo string.',
     example: 'ContraseñaSegura123',
   })
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   password: string;
 
   @ApiProperty({
@@ -58,6 +58,7 @@ export class User {
   id_rol: number;
 
   @ApiProperty({
+
     description: 'Fecha de nacimiento del usuario. Campo tipo Date.',
     example: '1990-01-01',
   })
@@ -106,10 +107,10 @@ export class User {
   @Column({ type: 'date', nullable: false })
   entry_date: Date;
 
-  @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
-  @OneToOne(() => HealthSheet)
-  @JoinColumn({ name: 'id_user' })
-  healthSheet: HealthSheet;
+  @ApiProperty({ description: 'Ficha de salud asociada al usuario, si existe.' })
+  @OneToOne(() => HealthSheet, (healthSheet) => healthSheet.user, { nullable: true, cascade: true })
+  healthSheet?: HealthSheet;
+  
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })
   @OneToMany(() => Payment, (payment) => payment.user)
@@ -119,8 +120,9 @@ export class User {
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
 
-  @ApiProperty({ description: 'Rol del usuario' })
-  @ManyToOne(() => Role, (rol) => rol.users)
+  @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
+  @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'id_rol' })
-  role: Role;
+  role?: Role;
+  
 }
