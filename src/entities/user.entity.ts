@@ -57,13 +57,13 @@ export class User {
 
     @ApiProperty({ 
         description: 'Ciudad del usuario', 
-        example: 'Ciudad de México' })
+        example: 'Ciudad de Buenos Aires' })
     @Column({ type: 'varchar', length: 50, nullable: false })    
     city: string;
 
     @ApiProperty({ 
         description: 'País del usuario', 
-        example: 'México' })
+        example: 'Argentina' })
     @Column({ type: 'varchar', length: 50, nullable: false })    
     country: string;
 
