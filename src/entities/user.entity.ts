@@ -7,11 +7,11 @@ import { Role } from './roles.entity';
 
 @Entity('user')
 export class User {
-    @PrimaryGeneratedColumn('uuid')
     @ApiProperty({ 
         description: 'Identificador único del usuario', 
         example: '123e4567-e89b-12d3-a456-426614174000', 
     })
+    @PrimaryGeneratedColumn('uuid')
     id_user: string;
     
     @ApiProperty({ 
