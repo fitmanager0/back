@@ -109,6 +109,7 @@ export class CreateUserDto {
     @IsBoolean({ message: 'El campo de Estado debe ser un valor booleano (true o false).' })
     isActive: boolean;
     
+    
     @ApiProperty({
         description: 'Fecha de registro del usuario. Campo de tipo Date.',
         example: '2023-01-01',
