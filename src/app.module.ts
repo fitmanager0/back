@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,  // Hace accesibles las variables de entorno en toda la app
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -17,10 +18,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true, 
+        entities: ['dist/*/.entity{.ts,.js}'],
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
