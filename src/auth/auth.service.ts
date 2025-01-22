@@ -14,21 +14,21 @@ export class AuthService {
 
 
   async signup(user: Partial<User>) {
-    // Validar si el email ya está registrado
+    
     const userExist = await this.usersRepository.findOneBy({ email: user.email });
     if (userExist) {
       throw new BadRequestException('Usuario ya registrado');
     }
   
-    // Validar la existencia del campo password
+  
     if (!user.password) {
       throw new BadRequestException('El campo password es obligatorio');
     }
   
-    // Encriptar la contraseña
+
     const hashedPassword = await bcrypt.hash(user.password, 10);
   
-    // Crear el nuevo usuario con la contraseña encriptada
+   
     const newUser: DeepPartial<User> = { ...user, password: hashedPassword };
     const saveUser = await this.usersRepository.save(newUser);
   
