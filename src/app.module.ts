@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PaymentModule } from './payment/payment.module';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,7 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,  // Hace accesibles las variables de entorno en toda la app
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule,
@@ -35,6 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
     RoutinesModule,
     LevelsModule,
     AuthModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
