@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PaymentModule } from './payment/payment.module';
+import { RoutinesModule } from './routines/routines.module';
+import { LevelsModule } from './levels/levels.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -9,7 +13,13 @@ import { PaymentModule } from './payment/payment.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule,
+        JwtModule.register({
+          global: true,
+          secret: process.env.JWT_SECRET,
+          signOptions: {expiresIn: '5h'},
+        })
+      ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -18,10 +28,14 @@ import { PaymentModule } from './payment/payment.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: ['dist/*/.entity{.ts,.js}'],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        autoLoadEntities: true, 
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
+    RoutinesModule,
+    LevelsModule,
+    AuthModule,
     PaymentModule,
   ],
   controllers: [],
