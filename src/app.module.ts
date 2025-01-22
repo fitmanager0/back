@@ -2,10 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PaymentModule } from './payment/payment.module';
+import { User } from './entities/user.entity';
+import { Routine } from './entities/routine.entity';
+import { Role } from './entities/roles.entity';
+import { Payment } from './entities/payments.entity';
+import { Level } from './entities/level.entity';
+import { HealthSheet } from './entities/helthsheet.entity';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,12 +18,13 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule,
+      imports: [
+        ConfigModule,
         JwtModule.register({
           global: true,
           secret: process.env.JWT_SECRET,
-          signOptions: {expiresIn: '5h'},
-        })
+          signOptions: { expiresIn: '5h' },
+        }),
       ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -29,7 +35,7 @@ import { JwtModule } from '@nestjs/jwt';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        autoLoadEntities: true, 
+        autoLoadEntities: true,
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
