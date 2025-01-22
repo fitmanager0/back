@@ -40,7 +40,7 @@ export class User {
     description: 'Contraseña del usuario. Campo de tipo string.',
     example: 'ContraseñaSegura123',
   })
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   password: string;
 
   @ApiProperty({
@@ -51,6 +51,7 @@ export class User {
   id_rol: number;
 
   @ApiProperty({
+
     description: 'Fecha de nacimiento del usuario. Campo tipo Date.',
     example: '1990-01-01',
   })
@@ -112,8 +113,17 @@ export class User {
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
 
+<<<<<<< HEAD
   @ApiProperty({ description: 'Rol del usuario' })
   @ManyToOne(() => Role, (role) => role.users) // cambio de rol a role
   @JoinColumn({ name: 'id_rol' })
   role: Role;
 }
+=======
+  @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
+  @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'id_rol' })
+  role?: Role;
+  
+}
+>>>>>>> origin/develop
