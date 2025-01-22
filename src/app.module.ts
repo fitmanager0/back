@@ -3,12 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
-<<<<<<< HEAD
 import { UserModule } from './user/user.module';
-=======
-import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
->>>>>>> origin/develop
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -38,11 +35,8 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     RoutinesModule,
     LevelsModule,
-<<<<<<< HEAD
     UserModule,
-=======
     AuthModule,
->>>>>>> origin/develop
   ],
   controllers: [],
   providers: [],
