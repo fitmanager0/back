@@ -10,6 +10,11 @@ import { Level } from './entities/level.entity';
 import { HealthSheet } from './entities/helthsheet.entity';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
+<<<<<<< HEAD
+import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
+=======
+>>>>>>> 5e7624170e97e5b24987e2c6b0ed273b0c468c4f
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -41,6 +46,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     RoutinesModule,
     LevelsModule,
+    UserModule,
     AuthModule,
     PaymentModule,
   ],

@@ -44,13 +44,6 @@ export class User {
   password: string;
 
   @ApiProperty({
-    description: 'Confirmación de la contraseña del usuario. Campo de tipo string.',
-    example: 'ContraseñaSegura123',
-  })
-  @Column({ type: 'varchar', nullable: false })
-  confirmPassword: string;
-
-  @ApiProperty({
     description: 'Identificador del rol. Campo de tipo número entero.',
     example: 1,
   })
@@ -107,10 +100,10 @@ export class User {
   @Column({ type: 'date', nullable: false })
   entry_date: Date;
 
-  @ApiProperty({ description: 'Ficha de salud asociada al usuario, si existe.' })
-  @OneToOne(() => HealthSheet, (healthSheet) => healthSheet.user, { nullable: true, cascade: true })
-  healthSheet?: HealthSheet;
-  
+  @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
+  @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
+  @JoinColumn({ name: 'id_user' })
+  healthSheet: HealthSheet;
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })
   @OneToMany(() => Payment, (payment) => payment.user)

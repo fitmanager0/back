@@ -19,6 +19,7 @@ export class HealthSheet {
       'Clave foránea que referencia al usuario con la planilla de salud',
     example: '0b8bffdd-a027-41b6-a2c9-f12d8ad1a0ec',
   })
+
   @OneToOne(() => User, (user) => user.healthSheet, { onDelete: 'CASCADE', nullable: false })
   @JoinColumn({ name: 'id_user' })
   user: User;
