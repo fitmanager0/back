@@ -44,13 +44,6 @@ export class User {
   password: string;
 
   @ApiProperty({
-    description: 'Confirmación de la contraseña del usuario. Campo de tipo string.',
-    example: 'ContraseñaSegura123',
-  })
-  @Column({ type: 'varchar', nullable: false })
-  confirmPassword: string;
-
-  @ApiProperty({
     description: 'Identificador del rol. Campo de tipo número entero.',
     example: 1,
   })
@@ -107,7 +100,7 @@ export class User {
   entry_date: Date;
 
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
-  @OneToOne(() => HealthSheet)
+  @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
   @JoinColumn({ name: 'id_user' })
   healthSheet: HealthSheet;
 
@@ -120,7 +113,7 @@ export class User {
   routines: Routine[];
 
   @ApiProperty({ description: 'Rol del usuario' })
-  @ManyToOne(() => Role, (rol) => rol.users)
+  @ManyToOne(() => Role, (role) => role.users) // cambio de rol a role
   @JoinColumn({ name: 'id_rol' })
   role: Role;
 }

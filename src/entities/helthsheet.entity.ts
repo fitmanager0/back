@@ -19,9 +19,9 @@ export class HealthSheet {
     example: '0b8bffdd-a027-41b6-a2c9-f12d8ad1a0ec',
   })
   @ManyToOne(() => User, (user) => user.healthSheet)
-  user: User;
+  //user: User;
   @JoinColumn({ name: 'id_user' })
-  id_user: User;
+  user: User;  //id_user: User;
 
   @Column({ length: 100 })
   @ApiProperty({

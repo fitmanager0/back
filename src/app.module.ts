@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoutinesModule } from './routines/routines.module';
 import { LevelsModule } from './levels/levels.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LevelsModule } from './levels/levels.module';
     }),
     RoutinesModule,
     LevelsModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

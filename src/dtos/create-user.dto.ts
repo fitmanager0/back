@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, isBoolean, IsDate, IsEmail, IsIn, IsInt, IsNotEmpty, IsString, Length, Matches, MaxDate, MaxLength, MinDate } from "class-validator";
+import { IsBoolean, IsDate, IsEmail, IsIn, IsInt, IsNotEmpty, IsString, Length, Matches, MaxDate, MaxLength, MinDate } from "class-validator";
 
 export class CreateUserDto {
 
@@ -60,7 +60,7 @@ export class CreateUserDto {
         example: '1990-01-01',
       })
     @IsNotEmpty({ message: 'Ingresar la fecha de nacimiento del usuario.' })
-    @Type(() => Date)
+    //@Type(() => Date)
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida. Ejemplo: 1990-01-01' })
     @MinDate(new Date('1900-01-01'), { message: 'La fecha de nacimiento no puede ser anterior al 1 de enero de 1900.' })
     @MaxDate(new Date(), { message: 'La fecha de nacimiento no puede ser una fecha futura.' })
@@ -115,7 +115,7 @@ export class CreateUserDto {
         example: '2023-01-01',
     })
     @IsNotEmpty({ message: 'Ingresar la fecha de registro del usuario.' })
-    @Type(() => Date)
+    //@Type(() => Date)
     @MaxDate(new Date(), { message: 'La fecha de registro no puede ser una fecha futura.' })
     entry_date: Date;
 }
