@@ -40,15 +40,8 @@ export class User {
     description: 'Contraseña del usuario. Campo de tipo string.',
     example: 'ContraseñaSegura123',
   })
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', length: 100, nullable: false })
   password: string;
-
-  @ApiProperty({
-    description: 'Confirmación de la contraseña del usuario. Campo de tipo string.',
-    example: 'ContraseñaSegura123',
-  })
-  @Column({ type: 'varchar', nullable: false })
-  confirmPassword: string;
 
   @ApiProperty({
     description: 'Identificador del rol. Campo de tipo número entero.',
@@ -58,6 +51,7 @@ export class User {
   id_rol: number;
 
   @ApiProperty({
+
     description: 'Fecha de nacimiento del usuario. Campo tipo Date.',
     example: '1990-01-01',
   })
@@ -107,7 +101,7 @@ export class User {
   entry_date: Date;
 
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
-  @OneToOne(() => HealthSheet)
+  @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
   @JoinColumn({ name: 'id_user' })
   healthSheet: HealthSheet;
 
@@ -119,8 +113,9 @@ export class User {
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
 
-  @ApiProperty({ description: 'Rol del usuario' })
-  @ManyToOne(() => Role, (rol) => rol.users)
+  @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
+  @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'id_rol' })
-  role: Role;
+  role?: Role;
+  
 }
