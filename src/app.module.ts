@@ -2,6 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PaymentModule } from './payment/payment.module';
+import { User } from './entities/user.entity';
+import { Routine } from './entities/routine.entity';
+import { Role } from './entities/roles.entity';
+import { Payment } from './entities/payments.entity';
+import { Level } from './entities/level.entity';
+import { HealthSheet } from './entities/helthsheet.entity';
 
 @Module({
   imports: [
@@ -18,7 +24,7 @@ import { PaymentModule } from './payment/payment.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: ['dist/*/.entity{.ts,.js}'],
+        entities: [HealthSheet, Level, Payment, Role, Routine, User],
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
