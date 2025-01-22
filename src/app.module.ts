@@ -8,6 +8,9 @@ import { Role } from './entities/roles.entity';
 import { Payment } from './entities/payments.entity';
 import { Level } from './entities/level.entity';
 import { HealthSheet } from './entities/helthsheet.entity';
+import { RoutinesModule } from './routines/routines.module';
+import { LevelsModule } from './levels/levels.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,7 +18,14 @@ import { HealthSheet } from './entities/helthsheet.entity';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [
+        ConfigModule,
+        JwtModule.register({
+          global: true,
+          secret: process.env.JWT_SECRET,
+          signOptions: { expiresIn: '5h' },
+        }),
+      ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -24,10 +34,14 @@ import { HealthSheet } from './entities/helthsheet.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [HealthSheet, Level, Payment, Role, Routine, User],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        autoLoadEntities: true,
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
+    RoutinesModule,
+    LevelsModule,
+    AuthModule,
     PaymentModule,
   ],
   controllers: [],
