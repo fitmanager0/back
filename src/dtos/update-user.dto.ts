@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsDate, IsEmail, IsIn, IsInt, IsOptional, IsString, Length, Matches, MaxDate, MaxLength, MinDate, Validate, ValidateIf } from "class-validator";
-import { MatchPassword } from "../utils/matchPassword";
+import { MatchPassword } from "../utils/Ms";
 
 export class UpdateUserDto {
 

@@ -113,17 +113,9 @@ export class User {
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
 
-<<<<<<< HEAD
-  @ApiProperty({ description: 'Rol del usuario' })
-  @ManyToOne(() => Role, (role) => role.users) // cambio de rol a role
-  @JoinColumn({ name: 'id_rol' })
-  role: Role;
-}
-=======
   @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
   @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'id_rol' })
   role?: Role;
   
 }
->>>>>>> origin/develop
