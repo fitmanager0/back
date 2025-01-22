@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class AuthService {
+export class AuthService  {
   constructor(@InjectRepository(User) private readonly usersRepository: Repository<User>,
   private jwtService: JwtService ) {}
 
