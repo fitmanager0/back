@@ -11,7 +11,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { HealthSheet } from './helthsheet.entity';
 import { Payment } from './payments.entity';
 import { Routine } from './routine.entity';
-import { Role } from './roles.entity';
+import { Role } from 'src/auth/guards/roles.enum';
+
+
 
 @Entity('user')
 export class User {
@@ -44,8 +46,8 @@ export class User {
   password: string;
 
   @ApiProperty({
-    description: 'Identificador del rol. Campo de tipo número entero.',
-    example: 1,
+    description: 'Rol del usuario. Puede ser Admin (1), User (2) o Guest (3)',
+    example: 'Role.Admin',
   })
   @Column({ type: 'int', nullable: false })
   id_rol: number;
@@ -100,10 +102,10 @@ export class User {
   @Column({ type: 'date', nullable: false })
   entry_date: Date;
 
-  @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
-  @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
-  @JoinColumn({ name: 'id_user' })
-  healthSheet: HealthSheet;
+//   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
+//   @OneToOne(() => HealthSheet, { nullable: true, cascade: true }) // se agrego , { nullable: true }
+//   @JoinColumn({ name: 'id_user' })
+//   healthSheet: HealthSheet;
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })
   @OneToMany(() => Payment, (payment) => payment.user)
@@ -113,9 +115,9 @@ export class User {
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
 
-  @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
-  @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'id_rol' })
-  role?: Role;
+//   @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
+//   @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
+//   @JoinColumn({ name: 'id_rol' })
+//   role?: Role;
   
 }

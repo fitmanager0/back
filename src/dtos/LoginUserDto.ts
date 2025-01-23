@@ -1,3 +1,4 @@
+// loginUser.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 
@@ -17,7 +18,7 @@ export class LoginUserDto {
   })
   @ApiProperty({
     description: 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial (!@#$%^&*). Longitud: entre 8 y 15 caracteres',
-    example: 'ContraseñaSegura123',
+    example: 'Password123#',
   })
   password: string;
 }

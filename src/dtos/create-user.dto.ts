@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsDate, IsEmail, IsIn, IsInt, IsNotEmpty, IsString, Length, Matches, MaxDate, MaxLength, MinDate } from "class-validator";
+import { IsBoolean, IsDate, IsEmail, IsIn, IsInt, IsNotEmpty, IsString, Length, Matches, MaxDate, MaxLength, MinDate, Validate } from "class-validator";
+import { MatchPassword } from "../utils/matchPassword";
+import { Role } from "src/entities/roles.entity";
 
 export class CreateUserDto {
 
@@ -24,26 +26,22 @@ export class CreateUserDto {
     
     @ApiProperty({
         description: 'Contraseña del usuario',
-        example: 'ContraseñaSegura123',
+        example: 'Password123#',
     })
-    @IsNotEmpty({ message: 'Contraseña del usuario que quiere registrarse. Debe ser un String. Como requisitos debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres. Es campo obligatorio.' })
-    @IsString({ message: 'El campo Contraseña de ser un string' })
+    @IsNotEmpty({ message: 'Debes registrar una contraseña.' })
+    @IsString({ message: 'El campo Contraseña debe contener caracteres válidos a una cadena de texto.' })
     @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
-        { message: 'La contraseña ingresada debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres.' }
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
+    { message: 'La contraseña ingresada debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres.' }
     )
     password: string;
 
     @ApiProperty({
         description: 'Confirmación del password del usuario que quiere registrarse. Debe ser un String. Como requisitos debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres. Es campo obligatorio.',
-        example: 'ContraseñaSegura123',
+        example: 'Password123#',
     })
-    @IsNotEmpty({ message: 'Ingrese la contraseña del usuario.' })
-    @IsString({ message: 'El campo Confirmar Contraseña debe ser un string' })
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
-        { message: 'La confirmación de la contraseña ingresada debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres.' }
-    )
+    @IsNotEmpty({message: 'Debes reingresar tu contraseña.'})
+    @Validate(MatchPassword, ['password'], {message: 'Las contraseñas ingresadas deben coincidir.'})
     confirmPassword: string;
 
     @ApiProperty({
@@ -60,7 +58,7 @@ export class CreateUserDto {
         example: '1990-01-01',
       })
     @IsNotEmpty({ message: 'Ingresar la fecha de nacimiento del usuario.' })
-    //@Type(() => Date)
+    @Type(() => Date)
     @IsDate({ message: 'La fecha de nacimiento debe ser una fecha válida. Ejemplo: 1990-01-01' })
     @MinDate(new Date('1900-01-01'), { message: 'La fecha de nacimiento no puede ser anterior al 1 de enero de 1900.' })
     @MaxDate(new Date(), { message: 'La fecha de nacimiento no puede ser una fecha futura.' })
@@ -115,7 +113,7 @@ export class CreateUserDto {
         example: '2023-01-01',
     })
     @IsNotEmpty({ message: 'Ingresar la fecha de registro del usuario.' })
-    //@Type(() => Date)
+    @Type(() => Date)
     @MaxDate(new Date(), { message: 'La fecha de registro no puede ser una fecha futura.' })
     entry_date: Date;
 }

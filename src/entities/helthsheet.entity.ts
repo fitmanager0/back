@@ -20,9 +20,9 @@ export class HealthSheet {
     example: '0b8bffdd-a027-41b6-a2c9-f12d8ad1a0ec',
   })
 
-  @OneToOne(() => User, (user) => user.healthSheet, { onDelete: 'CASCADE', nullable: false })
-  @JoinColumn({ name: 'id_user' })
-  user: User;
+  // @OneToOne(() => User, (user) => user.healthSheet, { onDelete: 'CASCADE', nullable: true })
+  // @JoinColumn({ name: 'id_user' })
+  // user: User;
 
   @Column({ length: 100 })
   @ApiProperty({

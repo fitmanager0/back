@@ -1,3 +1,93 @@
+// import { Injectable, NotFoundException } from '@nestjs/common';
+// import { UpdateUserDto } from '../dtos/update-user.dto';
+// import { InjectRepository } from '@nestjs/typeorm';
+// import { User } from '../entities/user.entity';
+// import { Repository } from 'typeorm';
+// import * as bcrypt from 'bcrypt';
+
+// @Injectable()
+// export class UserService {
+
+//   constructor(
+//     @InjectRepository(User)
+//     private readonly userRepository: Repository<User>,  
+//   ) {}
+
+//   async findAll() {
+//     return this.userRepository.find();
+//   }
+  
+//   async findOne(id: string) {
+//     const user = await this.userRepository.findOne({
+//       where: { id_user: id }
+//     })
+
+//     if(!user) {
+//       throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`)
+//     }
+
+//     return {
+//       id: user.id_user,
+//       name: user.name,
+//       email: user.email,
+//       rol: user.id_rol,
+//       birthdate: user.birthdate,
+//       phone: user.phone,
+//       address: user.address,
+//       city: user.city,
+//       country: user.country,
+//       active: user.isActive,
+//       entry_date: user.entry_date
+//     };
+//   }
+
+//   async update(id: string, updateUserDto: UpdateUserDto) {
+//     const user = await this.userRepository.findOne({
+//       where: { id_user: id }
+//     })
+
+//     if(!user) {
+//       throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`)
+//     }
+
+//     const updatedFields = Object.keys(updateUserDto).filter(
+//       (key) => updateUserDto[key] !== undefined && key !== 'confirmPassword',
+//     );
+//     if (updatedFields.length === 0) {
+//       return { 
+//         id, 
+//         message: `El usuario con ID: ${id}, no realizó ningun cambio durante la actualización.`
+//       };
+//     }
+
+//     if (updateUserDto.password) {
+//       const salt = await bcrypt.genSalt(10);
+//       updateUserDto.password = await bcrypt.hash(updateUserDto.password, salt);
+//     }
+
+//     const updatedUser = this.userRepository.create({ ...user, ...updateUserDto });
+//     await this.userRepository.save(updatedUser);
+
+//     const formattedFields = updatedFields.map((field) => `'${field}'`).join(', ');
+//     return {
+//       id,
+//       message: `El usuario con el ID: ${id}, há actualizado los siguientes campos con éxito: ${formattedFields}.`,
+//     };
+//   }
+
+//   async remove(id: string) {
+//     const user = await this.userRepository.findOne({
+//       where: { id_user: id },
+//     })
+
+//     return { 
+//       id, 
+//       message: `El usuario con ID: ${id}, fue eliminado con éxito.` 
+//     };
+//   }
+// }
+
+// user.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,23 +97,24 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,  
+    private readonly userRepository: Repository<User>,
   ) {}
 
+  // Obtener todos los usuarios
   async findAll() {
     return this.userRepository.find();
   }
-  
+
+  // Obtener usuario por ID
   async findOne(id: string) {
     const user = await this.userRepository.findOne({
-      where: { id_user: id }
-    })
+      where: { id_user: id },
+    });
 
-    if(!user) {
-      throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`)
+    if (!user) {
+      throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`);
     }
 
     return {
@@ -37,26 +128,51 @@ export class UserService {
       city: user.city,
       country: user.country,
       active: user.isActive,
-      entry_date: user.entry_date
+      entry_date: user.entry_date,
     };
   }
 
+
+
+
+  // **Nuevo método para encontrar usuario por email**
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `No se encontró un usuario con el email: ${email}.`,
+      );
+    }
+
+    return user;
+  }
+
+
+
+
+
+
+
+  // Actualizar usuario
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOne({
-      where: { id_user: id }
-    })
+      where: { id_user: id },
+    });
 
-    if(!user) {
-      throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`)
+    if (!user) {
+      throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`);
     }
 
     const updatedFields = Object.keys(updateUserDto).filter(
       (key) => updateUserDto[key] !== undefined && key !== 'confirmPassword',
     );
     if (updatedFields.length === 0) {
-      return { 
-        id, 
-        message: `El usuario con ID: ${id}, no realizó ningun cambio durante la actualización.`
+      return {
+        id,
+        message: `El usuario con ID: ${id}, no realizó ningun cambio durante la actualización.`,
       };
     }
 
@@ -65,24 +181,35 @@ export class UserService {
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, salt);
     }
 
-    const updatedUser = this.userRepository.create({ ...user, ...updateUserDto });
+    const updatedUser = this.userRepository.create({
+      ...user,
+      ...updateUserDto,
+    });
     await this.userRepository.save(updatedUser);
 
-    const formattedFields = updatedFields.map((field) => `'${field}'`).join(', ');
+    const formattedFields = updatedFields
+      .map((field) => `'${field}'`)
+      .join(', ');
     return {
       id,
       message: `El usuario con el ID: ${id}, há actualizado los siguientes campos con éxito: ${formattedFields}.`,
     };
   }
 
+  // Eliminar usuario
   async remove(id: string) {
     const user = await this.userRepository.findOne({
       where: { id_user: id },
-    })
+    });
 
-    return { 
-      id, 
-      message: `El usuario con ID: ${id}, fue eliminado con éxito.` 
+    if (!user) {
+      throw new NotFoundException(`El usuario con el ID: ${id}, no existe.`);
+    }
+
+    await this.userRepository.remove(user);
+    return {
+      id,
+      message: `El usuario con ID: ${id}, fue eliminado con éxito.`,
     };
   }
 }
