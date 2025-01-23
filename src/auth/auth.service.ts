@@ -9,8 +9,8 @@ import { User } from '../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/dtos/create-user.dto';
-import { HealthSheet } from 'src/entities/helthsheet.entity';
+import { CreateUserDto } from '../dtos/CreateUserDto';
+import { HealthSheet } from '../entities/helthsheet.entity';
 
 @Injectable()
 export class AuthService {
@@ -43,8 +43,9 @@ export class AuthService {
       throw new BadRequestException('Las contraseñas no coinciden.');
     }
 
-    // Validar si el rol existe o es permitido
-    if (!user.id_rol || ![1, 2, 3].includes(user.id_rol)) {
+    // Asignar id_rol por defecto a 3 si no se proporciona
+    const idRol = user.id_rol ?? 3; // Valor predeterminado es 3
+    if (![1, 2, 3].includes(idRol)) {
       throw new BadRequestException(
         'El id_rol debe ser uno de los siguientes valores: 1, 2 o 3.',
       );
@@ -74,9 +75,10 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
     // Crear nuevo usuario
-    const { confirmPassword, healthSheetId, ...userData } = user; // Excluir confirmPassword y healthSheetId
+    const { confirmPassword, healthSheetId, id_rol, ...userData } = user; // Excluir confirmPassword, healthSheetId, y id_rol
     const newUser: Partial<User> = {
       ...userData,
+      id_rol: idRol, // Aquí usamos el valor predeterminado
       password: hashedPassword,
       entry_date: new Date(),
       isActive: user.isActive ?? true,
