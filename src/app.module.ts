@@ -7,6 +7,10 @@ import { LevelsModule } from './levels/levels.module';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
+import { User } from './entities/user.entity';
+import { Role } from './entities/roles.entity';
+import { Level } from './entities/level.entity';
+import { UserSeederService } from './seeders/user-seeder.service';
 
 @Module({
   imports: [
@@ -40,8 +44,9 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AuthModule,
     PaymentModule,
+    TypeOrmModule.forFeature([User, Role, Level]),
   ],
   controllers: [],
-  providers: [],
+  providers: [UserSeederService],
 })
 export class AppModule {}

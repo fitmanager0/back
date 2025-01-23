@@ -56,7 +56,7 @@ export class User {
     example: '1990-01-01',
   })
   @Column({ type: 'date', nullable: true })
-  birthdate: Date;
+  birthdate: Date | null;
 
   @ApiProperty({
     description: 'Número de teléfono del usuario. Campo de tipo número entero.',
@@ -103,7 +103,7 @@ export class User {
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
   @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
   @JoinColumn({ name: 'id_user' })
-  healthSheet: HealthSheet;
+  healthSheet: HealthSheet | null;
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })
   @OneToMany(() => Payment, (payment) => payment.user)
