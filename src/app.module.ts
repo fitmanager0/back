@@ -13,6 +13,12 @@ import { Level } from './entities/level.entity';
 import { HealthSheet } from './entities/helthsheet.entity'; // Importar HealthSheet
 import { UserSeederService } from './seeders/user-seeder.service';
 import { UserSeederModule } from './seeders/seeders.module';
+import { PayUserSeederService } from './seeders/payuser-seeder.services';
+import { PaySeederModule } from './seeders/seeders.pay.module';
+import { Payment } from './entities/payments.entity';
+import { RoutineUserSeederService } from './seeders/routineuser-seeder.services';
+import { Routine } from './entities/routine.entity';
+import { RoutineSeederModule } from './seeders/seeders.routine.module';
 
 @Module({
   imports: [
@@ -48,9 +54,11 @@ import { UserSeederModule } from './seeders/seeders.module';
     AuthModule,
     PaymentModule,
     UserSeederModule,
-    TypeOrmModule.forFeature([User, Role, Level, HealthSheet]), // Añadir HealthSheet aquí
+    PaySeederModule,
+    RoutinesModule,
+    TypeOrmModule.forFeature([User, Role, Level, HealthSheet, Payment, Routine]), // Añadir HealthSheet aquí
   ],
   controllers: [],
-  providers: [UserSeederService],
+  providers: [UserSeederService,PayUserSeederService],
 })
 export class AppModule {}
