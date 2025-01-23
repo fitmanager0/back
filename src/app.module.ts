@@ -13,7 +13,6 @@ import { Level } from './entities/level.entity';
 import { HealthSheet } from './entities/helthsheet.entity'; // Importar HealthSheet
 import { UserSeederService } from './seeders/user-seeder.service';
 import { UserSeederModule } from './seeders/seeders.module';
-import { Tree } from 'typeorm';
 
 @Module({
   imports: [
