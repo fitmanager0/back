@@ -13,7 +13,7 @@ import { Payment } from './payments.entity';
 import { Routine } from './routine.entity';
 import { Role } from './roles.entity';
 
-@Entity('user')
+@Entity('users')
 export class User {
   @ApiProperty({
     description: 'Identificador único del usuario',
