@@ -23,7 +23,7 @@ export class CreateRoutineDto {
   @ApiProperty({
     description:
       'Identificador del nivel de la rutina. Debe ser un UUID válido.',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    example: '2',
   })
   @IsNotEmpty({ message: 'El ID del nivel es obligatorio.' })
   @IsUUID('4', { message: 'El ID del nivel debe ser un UUID válido.' })
