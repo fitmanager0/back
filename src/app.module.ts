@@ -10,7 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './entities/user.entity';
 import { Role } from './entities/roles.entity';
 import { Level } from './entities/level.entity';
+import { HealthSheet } from './entities/helthsheet.entity'; // Importar HealthSheet
 import { UserSeederService } from './seeders/user-seeder.service';
+import { UserSeederModule } from './seeders/seeders.module';
 
 @Module({
   imports: [
@@ -44,7 +46,8 @@ import { UserSeederService } from './seeders/user-seeder.service';
     UserModule,
     AuthModule,
     PaymentModule,
-    TypeOrmModule.forFeature([User, Role, Level]),
+    UserSeederModule,
+    TypeOrmModule.forFeature([User, Role, Level, HealthSheet]), // Añadir HealthSheet aquí
   ],
   controllers: [],
   providers: [UserSeederService],

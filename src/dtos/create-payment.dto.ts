@@ -41,4 +41,6 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   @IsDecimal()
   amount: number;
+
+  // NOTA: Eliminamos el campo 'uid' del DTO, ya que se genera automáticamente
 }
