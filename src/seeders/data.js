@@ -20,6 +20,7 @@ const data = {
       email: "admin@example.com",
       password: "hashed-password",
       id_rol: 1,
+      phone: "+1234567890", 
       entry_date: new Date().toISOString(),
     },
     // Entrenadores
@@ -29,6 +30,7 @@ const data = {
       email: "trainer1@example.com",
       password: "hashed-password",
       id_rol: 2,
+      phone: "+1987654321", 
       entry_date: new Date().toISOString(),
     },
     {
@@ -37,6 +39,7 @@ const data = {
       email: "trainer2@example.com",
       password: "hashed-password",
       id_rol: 2,
+      phone: "+1123456789",
       entry_date: new Date().toISOString(),
     },
     // Socios
@@ -50,6 +53,7 @@ const data = {
         email: `socio${i + 1}@example.com`,
         password: "hashed-password",
         id_rol: 3, // Rol de socio
+        phone: `+12345678${i + 10}`, // Generar números de teléfono como strings
         entry_date: date.toISOString(),
       };
     }),

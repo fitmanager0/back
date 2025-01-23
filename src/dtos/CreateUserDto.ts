@@ -2,13 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
-  isBoolean,
   IsDate,
   IsEmail,
   IsIn,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
+  IsUUID,
   Length,
   Matches,
   MaxDate,
@@ -18,93 +19,69 @@ import {
 
 export class CreateUserDto {
   @ApiProperty({
-    description:
-      'Nombre y Apellido del usuario. Campo de tipo string el cual debe tener una longuitud de 3 a 50 caracteres.',
+    description: 'Nombre y Apellido del usuario',
     example: 'Juan Pérez',
   })
   @IsNotEmpty({ message: 'Ingrese el Nombre y Apellido del usuario.' })
   @IsString({ message: 'El campo Nombre y Apellido debe ser de tipo string.' })
   @Length(3, 50, {
-    message:
-      'El Nombre y Apellido ingresado debe tener una longuitud de 3 a 50 carateres.',
+    message: 'El Nombre y Apellido debe tener entre 3 y 50 caracteres.',
   })
   name: string;
 
   @ApiProperty({
-    description:
-      'Correo electrónico del usuario. Campo de tipo string que no debe superar los 50 caracteres.',
+    description: 'Correo electrónico del usuario',
     example: 'juan.perez@example.com',
   })
   @IsNotEmpty({ message: 'Ingrese el Email del usuario.' })
-  @IsEmail(
-    {},
-    {
-      message:
-        'El campo de Email debe tener un formato de correo electronico válido: ejemplo@email.com',
-    },
-  )
-  @MaxLength(50, {
-    message: 'El Email ingresado no debe exceder los 50 caracteres.',
-  })
+  @IsEmail({}, { message: 'El campo Email debe ser válido.' })
+  @MaxLength(50, { message: 'El Email no debe exceder los 50 caracteres.' })
   email: string;
 
   @ApiProperty({
     description: 'Contraseña del usuario',
     example: 'ContraseñaSegura123',
   })
-  @IsNotEmpty({
-    message:
-      'Contraseña del usuario que quiere registrarse. Debe ser un String. Como requisitos debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres. Es campo obligatorio.',
-  })
-  @IsString({ message: 'El campo Contraseña de ser un string' })
+  @IsNotEmpty({ message: 'Ingrese la contraseña del usuario.' })
+  @IsString({ message: 'El campo Contraseña debe ser un string.' })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
     {
       message:
-        'La contraseña ingresada debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres.',
+        'La contraseña debe incluir mayúscula, minúscula, número y carácter especial (!@#$%^&*) y tener entre 8 y 15 caracteres.',
     },
   )
   password: string;
 
   @ApiProperty({
-    description:
-      'Confirmación del password del usuario que quiere registrarse. Debe ser un String. Como requisitos debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres. Es campo obligatorio.',
+    description: 'Confirmación de la contraseña',
     example: 'ContraseñaSegura123',
   })
-  @IsNotEmpty({ message: 'Ingrese la contraseña del usuario.' })
-  @IsString({ message: 'El campo Confirmar Contraseña debe ser un string' })
+  @IsNotEmpty({ message: 'Confirme la contraseña del usuario.' })
+  @IsString({ message: 'El campo Confirmar Contraseña debe ser un string.' })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
     {
-      message:
-        'La confirmación de la contraseña ingresada debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres.',
+      message: 'La confirmación de la contraseña debe ser válida.',
     },
   )
   confirmPassword: string;
 
-  @ApiProperty({
-    description:
-      'Identificador del rol del usuario. Debe ser un número entero. Valores permitidos: 1, 2 o 3',
-    example: 1,
-  })
-  @IsNotEmpty({ message: 'Debe ingresar el Id del Rol del usuario.' })
+
+  @IsOptional() // Permite que no se envíe
   @IsInt({ message: 'El Id del Rol debe ser un número entero.' })
   @IsIn([1, 2, 3], {
-    message: 'El Id del Rol debe ser uno de los siguientes valores: 1, 2 o 3.',
+    message: 'El Id del Rol debe ser uno de los valores: 1, 2 o 3.',
   })
-  id_rol: number;
+  id_rol?: number;
 
   @ApiProperty({
-    description:
-      'Fecha de nacimiento del usuario. Este campo debe ser de tipo Fecha',
+    description: 'Fecha de nacimiento del usuario',
     example: '1990-01-01',
   })
-  @IsNotEmpty({ message: 'Ingresar la fecha de nacimiento del usuario.' })
+  @IsNotEmpty({ message: 'Ingrese la fecha de nacimiento del usuario.' })
   @Type(() => Date)
-  @IsDate({
-    message:
-      'La fecha de nacimiento debe ser una fecha válida. Ejemplo: 1990-01-01',
-  })
+  @IsDate({ message: 'La fecha de nacimiento debe ser válida.' })
   @MinDate(new Date('1900-01-01'), {
     message:
       'La fecha de nacimiento no puede ser anterior al 1 de enero de 1900.',
@@ -115,62 +92,49 @@ export class CreateUserDto {
   birthdate: Date;
 
   @ApiProperty({
-    description: 'Número de teléfono del usuario. Campo de tipo número entero.',
-    example: 1234567890,
+    description: 'Número de teléfono del usuario',
+    example: '1234567890',
   })
-  @IsNotEmpty({ message: 'Debe ingresar el número telofónico del usuario.' })
-  @IsInt({ message: 'El número telefónico debe ser un número entero.' })
-  phone: number;
+  @IsNotEmpty({ message: 'Ingrese el número telefónico del usuario.' })
+  @IsString({ message: 'El número telefónico debe ser un string.' })
+  phone: string;
 
   @ApiProperty({
-    description:
-      'Dirección del usuario. Campo de tipo string el cual no debe superar los 50 caracteres.',
+    description: 'Dirección del usuario',
     example: 'Avenida Siempre Viva 123',
   })
-  @IsNotEmpty({ message: 'Ingrese el domicilio del usuario.' })
-  @IsString({ message: 'El campo domicilio debe ser de tipo string.' })
-  @MaxLength(50, { message: 'El domicilio no debe superar los 50 caracteres.' })
+  @IsNotEmpty({ message: 'Ingrese la dirección del usuario.' })
+  @IsString({ message: 'El campo Dirección debe ser un string.' })
+  @MaxLength(50, { message: 'La dirección no debe exceder los 50 caracteres.' })
   address: string;
 
   @ApiProperty({
-    description:
-      'Ciudad del usuario. Campo de tipo string el cual no debe superar los 50 caracteres.',
+    description: 'Ciudad del usuario',
     example: 'Ciudad de Buenos Aires',
   })
-  @IsNotEmpty({ message: 'Ingrese la ciudad de recidencia del usuario.' })
-  @IsString({ message: 'El campo de Ciudad debe ser de tipo string.' })
-  @MaxLength(50, { message: 'La ciudad no debe superar los 50 caracteres.' })
+  @IsNotEmpty({ message: 'Ingrese la ciudad del usuario.' })
+  @IsString({ message: 'El campo Ciudad debe ser un string.' })
+  @MaxLength(50, { message: 'La ciudad no debe exceder los 50 caracteres.' })
   city: string;
 
   @ApiProperty({
-    description:
-      'País del usuario. Campo de tipo string el cual no debe superar los 50 caracteres.',
+    description: 'País del usuario',
     example: 'Argentina',
   })
-  @IsNotEmpty({ message: 'Ingrese el país de del usuario' })
-  @IsString({ message: 'El campo de País debe se de tipo string.' })
-  @MaxLength(50, { message: 'El país no debe superar los 50 caracteres.' })
+  @IsNotEmpty({ message: 'Ingrese el país del usuario.' })
+  @IsString({ message: 'El campo País debe ser un string.' })
+  @MaxLength(50, { message: 'El país no debe exceder los 50 caracteres.' })
   country: string;
 
   @ApiProperty({
-    description:
-      'Indica si el usuario está activo. Este campo es de tipo booleano(true o false)',
+    description: 'Estado activo del usuario',
     example: true,
   })
-  @IsNotEmpty({ message: 'Ingrese el campo de Estado del usuario.' })
-  @IsBoolean({
-    message: 'El campo de Estado debe ser un valor booleano (true o false).',
-  })
+  @IsNotEmpty({ message: 'Indique si el usuario está activo.' })
+  @IsBoolean({ message: 'El campo Estado debe ser un valor booleano.' })
   isActive: boolean;
 
-  @ApiProperty({
-    description: 'Fecha de registro del usuario. Campo de tipo Date.',
-    example: '2023-01-01',
-  })
-  @IsNotEmpty({ message: 'Ingresar la fecha de registro del usuario.' })
-  @Type(() => Date)
-  @MaxDate(new Date(), {
-    message: 'La fecha de registro no puede ser una fecha futura.',
-  })
-  entry_date: Date;
+  @IsUUID('4', { message: 'El campo HealthSheetId debe ser un UUID válido.' })
+  @IsOptional() // Es opcional
+  healthSheetId?: string; // Asegúrate de que sea un string opcional
 }

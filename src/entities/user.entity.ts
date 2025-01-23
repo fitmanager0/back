@@ -60,11 +60,11 @@ export class User {
   birthdate: Date | null;
 
   @ApiProperty({
-    description: 'Número de teléfono del usuario. Campo de tipo número entero.',
-    example: 1234567890,
+    description: 'Número de teléfono del usuario. Campo de tipo string.',
+    example: '+1234567890',
   })
-  @Column({ type: 'int', nullable: true })
-  phone: number | null;
+  @Column({ type: 'varchar', length: 15, nullable: true }) // Cambiado a varchar con un límite razonable
+  phone: string | null;
 
   @ApiProperty({
     description: 'Dirección de residencia del usuario. Campo tipo string.',
