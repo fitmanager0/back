@@ -28,11 +28,6 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     TypeOrmModule.forRootAsync({
       imports: [
         ConfigModule,
-        JwtModule.register({
-          global: true,
-          secret: process.env.JWT_SECRET,
-          signOptions: { expiresIn: '5h' },
-        }),
       ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -47,6 +42,11 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
         dropSchema: true,
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
+    }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'mySuperSecretKey',
+      signOptions: { expiresIn: '1h' },
     }),
     RoutinesModule,
     LevelsModule,

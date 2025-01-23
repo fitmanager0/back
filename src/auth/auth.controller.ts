@@ -9,19 +9,46 @@ import {
 import { AuthService } from './auth.service';
 import { LoginUserDto } from '../dtos/LoginUserDto';
 import { CreateUserDto } from '../dtos/CreateUserDto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth') 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
+  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuario registrado correctamente.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos inválidos o incompletos.',
+  })
+  @ApiBody({
+    description: 'Datos necesarios para registrar un usuario',
+    type: CreateUserDto,
+  })
   async signUp(@Body() user: CreateUserDto) {
     // Llamar al servicio para registrar al usuario
     return this.authService.signup(user);
   }
 
   @Post('/signin')
+  @ApiOperation({ summary: 'Iniciar sesión con correo electrónico y contraseña' })
+  @ApiResponse({
+    status: 200,
+    description: 'Inicio de sesión exitoso, devuelve un token de acceso.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Credenciales inválidas o error desconocido.',
+  })
+  @ApiBody({
+    description: 'Datos necesarios para iniciar sesión',
+    type: LoginUserDto,
+  })
   async signin(@Body() loginUserDto: LoginUserDto) {
     try {
       const { email, password } = loginUserDto;
