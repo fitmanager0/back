@@ -27,12 +27,18 @@ export class UserSeederService implements OnModuleInit {
       return;
     }
 
-    const adminRole = await this.roleRepository.findOne({
+    let adminRole = await this.roleRepository.findOne({
       where: { description: 'administrador' },
     });
+
+    // Crear el rol de administrador si no existe
     if (!adminRole) {
-      console.log('No se encontró el rol de administrador.');
-      return;
+      console.log('No se encontró el rol de administrador. Creando...');
+      adminRole = this.roleRepository.create({
+        description: 'administrador',
+      });
+      adminRole = await this.roleRepository.save(adminRole);
+      console.log('Rol de administrador creado exitosamente.');
     }
 
     // Crear un HealthSheet para el administrador
