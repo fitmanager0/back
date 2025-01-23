@@ -18,8 +18,9 @@ const data = {
       id_user: uuidv4(),
       name: "Admin User",
       email: "admin@example.com",
-      password: "hashed-password", // Recuerda cifrar la contraseña
-      id_rol: 1, // Asigna el id_role correspondiente
+      password: "hashed-password",
+      id_rol: 1,
+      phone: "+1234567890", 
       entry_date: new Date().toISOString(),
     },
     // Entrenadores
@@ -27,16 +28,18 @@ const data = {
       id_user: uuidv4(),
       name: "Trainer One",
       email: "trainer1@example.com",
-      password: "hashed-password", // Recuerda cifrar la contraseña
+      password: "hashed-password",
       id_rol: 2,
+      phone: "+1987654321", 
       entry_date: new Date().toISOString(),
     },
     {
       id_user: uuidv4(),
       name: "Trainer Two",
       email: "trainer2@example.com",
-      password: "hashed-password", // Recuerda cifrar la contraseña
+      password: "hashed-password",
       id_rol: 2,
+      phone: "+1123456789",
       entry_date: new Date().toISOString(),
     },
     // Socios
@@ -48,8 +51,9 @@ const data = {
         id_user,
         name: `Socio ${i + 1}`,
         email: `socio${i + 1}@example.com`,
-        password: "hashed-password", // Recuerda cifrar la contraseña
+        password: "hashed-password",
         id_rol: 3, // Rol de socio
+        phone: `+12345678${i + 10}`, // Generar números de teléfono como strings
         entry_date: date.toISOString(),
       };
     }),

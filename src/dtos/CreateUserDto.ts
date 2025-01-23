@@ -120,7 +120,7 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'Debe ingresar el número telofónico del usuario.' })
   @IsInt({ message: 'El número telefónico debe ser un número entero.' })
-  phone: number;
+  phone: string;
 
   @ApiProperty({
     description:

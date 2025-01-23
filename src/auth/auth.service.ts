@@ -113,6 +113,6 @@ export class AuthService {
     };
     const token = this.jwtService.sign(payload);
 
-    return { mensaje: 'Logged in', token };
+    return { mensaje: 'Logged in', token, user };
   }
 }
