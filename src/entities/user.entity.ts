@@ -23,14 +23,16 @@ export class User {
   id_user: string;
 
   @ApiProperty({
-    description: 'Nombre y Apellido del usuario. Campo de tipo string el cual no debe superar los 50 caracteres.',
+    description:
+      'Nombre y Apellido del usuario. Campo de tipo string el cual no debe superar los 50 caracteres.',
     example: 'Juan Pérez',
   })
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
 
   @ApiProperty({
-    description: 'Correo electrónico del usuario. Campo de tipo string, único y no debe superar los 50 caracteres.',
+    description:
+      'Correo electrónico del usuario. Campo de tipo string, único y no debe superar los 50 caracteres.',
     example: 'juan.perez@example.com',
   })
   @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
@@ -51,40 +53,39 @@ export class User {
   id_rol: number;
 
   @ApiProperty({
-
     description: 'Fecha de nacimiento del usuario. Campo tipo Date.',
     example: '1990-01-01',
   })
   @Column({ type: 'date', nullable: true })
-  birthdate: Date;
+  birthdate: Date | null;
 
   @ApiProperty({
     description: 'Número de teléfono del usuario. Campo de tipo número entero.',
     example: 1234567890,
   })
-  @Column({ type: 'int', nullable: false })
-  phone: number;
+  @Column({ type: 'int', nullable: true })
+  phone: number | null;
 
   @ApiProperty({
     description: 'Dirección de residencia del usuario. Campo tipo string.',
     example: 'Avenida Siempre Viva 123',
   })
-  @Column({ type: 'varchar', length: 50, nullable: false })
-  address: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  address: string | null;
 
   @ApiProperty({
     description: 'Ciudad del usuario. Campo de tipo string.',
     example: 'Ciudad de Buenos Aires',
   })
-  @Column({ type: 'varchar', length: 50, nullable: false })
-  city: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  city: string | null;
 
   @ApiProperty({
     description: 'País del usuario. Campo de tipo string.',
     example: 'Argentina',
   })
-  @Column({ type: 'varchar', length: 50, nullable: false })
-  country: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  country: string | null;
 
   @ApiProperty({
     description: 'Indica si el usuario está activo. Campo de tipo Boolean.',
@@ -101,9 +102,12 @@ export class User {
   entry_date: Date;
 
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
-  @OneToOne(() => HealthSheet, { nullable: true }) // se agrego , { nullable: true }
+  @OneToOne(() => HealthSheet, (healthSheet) => healthSheet.user, {
+    nullable: true,
+    onDelete: 'SET NULL', // Esto asegura que no se rompa la relación si se elimina el HealthSheet
+  })
   @JoinColumn({ name: 'id_user' })
-  healthSheet: HealthSheet;
+  healthSheet: HealthSheet | null;
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })
   @OneToMany(() => Payment, (payment) => payment.user)
@@ -114,8 +118,10 @@ export class User {
   routines: Routine[];
 
   @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
-  @ManyToOne(() => Role, (role) => role.users, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => Role, (role) => role.users, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'id_rol' })
   role?: Role;
-  
 }

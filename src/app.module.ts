@@ -7,6 +7,12 @@ import { LevelsModule } from './levels/levels.module';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
+import { User } from './entities/user.entity';
+import { Role } from './entities/roles.entity';
+import { Level } from './entities/level.entity';
+import { HealthSheet } from './entities/helthsheet.entity'; // Importar HealthSheet
+import { UserSeederService } from './seeders/user-seeder.service';
+import { UserSeederModule } from './seeders/seeders.module';
 
 @Module({
   imports: [
@@ -32,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
+        dropSchema: true,
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
@@ -40,8 +47,10 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AuthModule,
     PaymentModule,
+    UserSeederModule,
+    TypeOrmModule.forFeature([User, Role, Level, HealthSheet]), // Añadir HealthSheet aquí
   ],
   controllers: [],
-  providers: [],
+  providers: [UserSeederService],
 })
 export class AppModule {}

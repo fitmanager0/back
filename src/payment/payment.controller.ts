@@ -26,7 +26,7 @@ export class PaymentController {
   }
 
   @Post()
-  create(@Body() createPaymentDto: CreatePaymentDto) {
+  async create(@Body() createPaymentDto: CreatePaymentDto) {
     return this.paymentService.create(createPaymentDto);
   }
 
@@ -39,6 +39,4 @@ export class PaymentController {
   remove(@Param('id') id: string) {
     return this.paymentService.remove(id);
   }
-
-
 }
