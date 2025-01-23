@@ -17,7 +17,6 @@ export class AuthController {
 
   @Post('/signup')
   async signUp(@Body() user: CreateUserDto) {
-    // Llamar al servicio para registrar al usuario
     return this.authService.signup(user);
   }
 
