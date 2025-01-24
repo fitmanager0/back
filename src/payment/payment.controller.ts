@@ -25,17 +25,22 @@ export class PaymentController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.Coach)
-
   @Get()
   findAll() {
     return this.paymentService.findAll();
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.paymentService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
   @Post()
   async create(@Body() createPaymentDto: CreatePaymentDto) {
     return this.paymentService.create(createPaymentDto);
