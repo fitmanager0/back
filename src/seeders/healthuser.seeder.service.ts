@@ -1,4 +1,4 @@
-// Seeder para generar fichas médicas para los socios
+
 
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
