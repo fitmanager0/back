@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards } from '@nestjs/common';
 import { RoutinesService } from './routines.service';
 import { CreateRoutineDto } from '../dtos/create-routine.dto';
 import { UpdateRoutineDto } from '../dtos/update-routine.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { Role } from 'src/auth/guards/roles.enum';
 
 @ApiTags('routines')
 @Controller('routines')
@@ -10,6 +14,9 @@ export class RoutinesController {
   constructor(private readonly routinesService: RoutinesService) {}
 
   // Ruta para asociar una rutina sin autenticación JWT
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
   @Post('/associate')
   associateRoutine(@Body() createRoutineDto: CreateRoutineDto) {
     return this.routinesService.associateRoutine(createRoutineDto);

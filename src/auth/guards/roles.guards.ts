@@ -8,6 +8,18 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
+    
+    // Verifica si la ruta tiene la metadata "isPublic"
+    const isPublic = this.reflector.get<boolean>('isPublic', context.getHandler());
+    if (isPublic) {
+      return true; // Permite el acceso si es público
+    }
+    
+
+
+    
+    
+    
     // Obtenemos los roles requeridos de la metadata del decorador @Roles
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),

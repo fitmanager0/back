@@ -19,6 +19,9 @@ import { Payment } from './entities/payments.entity';
 import { RoutineUserSeederService } from './seeders/routineuser-seeder.services';
 import { Routine } from './entities/routine.entity';
 import { RoutineSeederModule } from './seeders/seeders.routine.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { RolesGuard } from './auth/guards/roles.guards';
 
 @Module({
   imports: [
@@ -60,6 +63,10 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     TypeOrmModule.forFeature([User, Role, Level, HealthSheet, Payment, Routine]), // Añadir HealthSheet aquí
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService],
+  providers: [
+    UserSeederService,
+    PayUserSeederService,
+    RoutineUserSeederService,
+  ],
 })
 export class AppModule {}

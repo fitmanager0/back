@@ -6,14 +6,25 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
+import { Role } from 'src/auth/guards/roles.enum';
 
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
+
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
 
   @Get()
   findAll() {
