@@ -2,19 +2,26 @@ import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards } from '@n
 import { RoutinesService } from './routines.service';
 import { CreateRoutineDto } from '../dtos/create-routine.dto';
 import { UpdateRoutineDto } from '../dtos/update-routine.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from 'src/auth/guards/roles.enum';
 
-@ApiTags('routines')
+@ApiTags('routines: Gestión de rutinas')
 @Controller('routines')
 export class RoutinesController {
   constructor(private readonly routinesService: RoutinesService) {}
 
-  // Ruta para asociar una rutina sin autenticación JWT
   @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Crea una rutina nueva (ruta protegida para Admin y Coach)', 
+    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.' 
+  })
+  @ApiResponse({ status: 201, description: 'Rutina creada correctamente.' })
+  @ApiResponse({ status: 400, description: 'Solicitud incorrecta.' })
+  @ApiResponse({ status: 401, description: 'No autorizado.' })
+  @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.Coach)
   @Post('/associate')
@@ -22,25 +29,62 @@ export class RoutinesController {
     return this.routinesService.associateRoutine(createRoutineDto);
   }
 
-  // Ruta para obtener todas las rutinas
+  @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Obtener todas las rutinas (ruta protegida)', 
+    description: 'Esta ruta está protegida, solo los usuarios autenticados pueden acceder.' 
+  })
+  @ApiResponse({ status: 200, description: 'Retorna todas las rutinas.' })
+  @ApiResponse({ status: 401, description: 'No autorizado.' })
+  @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.routinesService.findAll();
   }
 
-  // Ruta para obtener una rutina por ID
+  @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Obtener una rutina por ID (ruta protegida)', 
+    description: 'Esta ruta está protegida, solo los usuarios autenticados pueden acceder.' 
+  })
+  @ApiResponse({ status: 200, description: 'Retorna una rutina específica.' })
+  @ApiResponse({ status: 404, description: 'Rutina no encontrada.' })
+  @ApiResponse({ status: 401, description: 'No autorizado.' })
+  @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.routinesService.findOne(id);
   }
 
-  // Ruta para actualizar una rutina por ID
+  @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Actualizar una rutina (ruta protegida para Admin y Coach)', 
+    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.' 
+  })
+  @ApiResponse({ status: 200, description: 'Rutina actualizada correctamente.' })
+  @ApiResponse({ status: 404, description: 'Rutina no encontrada.' })
+  @ApiResponse({ status: 401, description: 'No autorizado.' })
+  @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto) {
     return this.routinesService.update(id, updateRoutineDto);
   }
 
-  // Ruta para eliminar una rutina por ID
+  @ApiBearerAuth()
+  @ApiOperation({ 
+    summary: 'Eliminar una rutina (ruta protegida para Admin y Coach)', 
+    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.' 
+  })
+  @ApiResponse({ status: 200, description: 'Rutina eliminada correctamente.' })
+  @ApiResponse({ status: 404, description: 'Rutina no encontrada.' })
+  @ApiResponse({ status: 401, description: 'No autorizado.' })
+  @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.routinesService.remove(id);
