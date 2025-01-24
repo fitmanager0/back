@@ -10,14 +10,19 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from '../dtos/LoginUserDto';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from './guards/public.decorator';
 
-@ApiTags('Auth') 
+@ApiTags('Auth: Registro e Inicio de Sesión') 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('/signup')
-  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @ApiOperation({ 
+    summary: 'Registrar un nuevo usuario (Public)',
+    description: 'Registro de nuevos usuarios, acceso puclico.'
+  })
   @ApiResponse({
     status: 201,
     description: 'Usuario registrado correctamente.',
@@ -34,8 +39,12 @@ export class AuthController {
     return this.authService.signup(user);
   }
 
+  @Public()
   @Post('/signin')
-  @ApiOperation({ summary: 'Iniciar sesión con correo electrónico y contraseña' })
+  @ApiOperation({ 
+    summary: 'Iniciar sesión de usuarios (Public)',
+    description: 'Inicio de seción de usuarios mediante autenticación ingresando correo electrónico y contraseña'
+  })
   @ApiResponse({
     status: 200,
     description: 'Inicio de sesión exitoso, devuelve un token de acceso.',

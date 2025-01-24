@@ -1,5 +1,3 @@
-// Seeder para generar fichas médicas para los socios
-
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -26,7 +24,7 @@ export class HealthUserSeederService implements OnModuleInit {
         console.error(
           `Usuario sin id_user encontrado: ${user.name}. Se omite la creación de ficha.`,
         );
-        continue; // Saltar usuarios sin id_user
+        continue;
       }
 
       console.log(`Verificando ficha médica para el usuario: ${user.name}...`);
@@ -47,6 +45,7 @@ export class HealthUserSeederService implements OnModuleInit {
       const newHealthSheet = this.healthSheetRepository.create({
         user: user,
         urlSheet: `https://res.cloudinary.com/demo/fichas/${user.id_user}.pdf`,
+        isTemporary: false,
       });
 
       await this.healthSheetRepository.save(newHealthSheet);
@@ -54,6 +53,28 @@ export class HealthUserSeederService implements OnModuleInit {
       console.log(`Ficha del socio ${user.name} creada.`);
     }
 
+    console.log('Eliminando fichas médicas temporales...');
+    const temporaryHealthSheets = await this.healthSheetRepository.find({
+      where: { isTemporary: true },
+      relations: ['user'],
+    });
+
+    for (const sheet of temporaryHealthSheets) {
+      if (sheet.user) {
+        console.log(
+          `Desasociando ficha médica temporal del usuario: ${sheet.user.name}`,
+        );
+        // Desasociar manualmente la relación con el usuario
+        sheet.user.healthSheet = null;
+        await this.userRepository.save(sheet.user);
+      }
+
+      // Eliminar la ficha médica temporal
+      console.log(`Eliminando ficha médica temporal: ${sheet.id_sheet}`);
+      await this.healthSheetRepository.remove(sheet);
+    }
+
+    console.log('Fichas médicas temporales eliminadas correctamente.');
     console.log('Fichas generadas correctamente.');
   }
 }

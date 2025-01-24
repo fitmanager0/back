@@ -15,17 +15,14 @@ declare module 'express' {
 }
 
 
-@ApiTags('users')
+@ApiTags('Users: Gestión de usuarios')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @Get()
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
   @ApiOperation({ 
-    summary: 'Obtener todos los usuarios',
+    summary: 'Obtener datos de todos los usuarios (Admin y Coach)',
     description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.'
   })
   @ApiResponse({
@@ -36,16 +33,17 @@ export class UserController {
     status: 403,
     description: 'Acceso denegado. Solo Administradores pueden acceder.',
   })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
+  @Get()
   findAll() {
     return this.userService.findAll();
   }
 
+
   @ApiBearerAuth()
-  @Get(':id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin, Role.Coach)
   @ApiOperation({ 
-    summary: 'Obtener un usuario por ID',
+    summary: 'Obtener datos de usuario por ID (Admin y Coach)',
     description: 'Los roles permitidos para acceder a este endpoint son: **Administrador** y **Entrenador**.',
   })
   @ApiParam({
@@ -66,16 +64,17 @@ export class UserController {
     status: 404,
     description: 'No se encontró el usuario con el ID especificado.',
   })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
+  @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.findOne(id);
   }
 
+
   @ApiBearerAuth()
-  @Put(':id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
   @ApiOperation({ 
-    summary: 'Actualizar un usuario por ID',
+    summary: 'Actualizar un usuario por ID (Admin)',
     description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.',
   })
   @ApiParam({
@@ -104,18 +103,19 @@ export class UserController {
     status: 404,
     description: 'Usuario no encontrado.',
   })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Put(':id')
   update(
     @Param('id', new ParseUUIDPipe()) id: string, 
     @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
+  
   @ApiBearerAuth()
-  @Delete(':id')
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
   @ApiOperation({ 
-    summary: 'Eliminar un usuario por ID',
+    summary: 'Eliminar un usuario por ID (Admin)',
     description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.',
   })
   @ApiParam({
@@ -136,6 +136,9 @@ export class UserController {
     status: 404,
     description: 'Usuario no encontrado.',
   })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Delete(':id')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.remove(id);
   }
