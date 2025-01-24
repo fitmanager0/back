@@ -20,12 +20,12 @@ export class LevelsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.levelsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
+  update(@Param('id') id: number, @Body() updateLevelDto: UpdateLevelDto) {
     return this.levelsService.update(id, updateLevelDto);
   }
 

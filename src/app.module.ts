@@ -55,10 +55,22 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     PaymentModule,
     UserSeederModule,
     PaySeederModule,
+    RoutineSeederModule,
     RoutinesModule,
-    TypeOrmModule.forFeature([User, Role, Level, HealthSheet, Payment, Routine]), // Añadir HealthSheet aquí
+    TypeOrmModule.forFeature([
+      User,
+      Role,
+      Level,
+      HealthSheet,
+      Payment,
+      Routine,
+    ]),
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService],
+  providers: [
+    UserSeederService,
+    PayUserSeederService,
+    RoutineUserSeederService,
+  ],
 })
 export class AppModule {}

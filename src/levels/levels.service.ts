@@ -21,7 +21,7 @@ export class LevelsService {
     return this.levelRepository.find({ relations: ['routines'] });
   }
 
-  async findOne(id: string): Promise<Level> {
+  async findOne(id: number): Promise<Level> {
     const level = await this.levelRepository.findOne({
       where: { id_level: id },
       relations: ['routines'],
@@ -32,7 +32,7 @@ export class LevelsService {
     return level;
   }
 
-  async update(id: string, updateLevelDto: UpdateLevelDto): Promise<Level> {
+  async update(id: number, updateLevelDto: UpdateLevelDto): Promise<Level> {
     await this.findOne(id);
     await this.levelRepository.update(id, updateLevelDto);
     return this.findOne(id);

@@ -29,9 +29,9 @@ export class RoutineUserSeederService implements OnModuleInit {
 
   private async seedLevels(): Promise<void> {
     const levels = [
-      { id_level: '1', description: 'Inicial' },
-      { id_level: '2', description: 'Intermedio' },
-      { id_level: '3', description: 'Avanzado' },
+      { id_level: 1, description: 'Inicial' },
+      { id_level: 2, description: 'Intermedio' },
+      { id_level: 3, description: 'Avanzado' },
     ];
 
     for (const level of levels) {
@@ -55,7 +55,7 @@ export class RoutineUserSeederService implements OnModuleInit {
 
         const routine = this.routineRepository.create({
           user,
-          level: { id_level: id_level.toString() } as Level,
+          level: { id_level: id_level } as Level,
           url_routine: routineUrl,
         });
 
