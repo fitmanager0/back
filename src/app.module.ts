@@ -28,9 +28,7 @@ import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule,
-      ],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -70,6 +68,11 @@ import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
     ]),
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService,HealthUserSeederService],
+  providers: [
+    UserSeederService,
+    PayUserSeederService,
+    RoutineUserSeederService,
+    HealthUserSeederService,
+  ],
 })
 export class AppModule {}
