@@ -55,16 +55,15 @@ export class UserSeederService implements OnModuleInit {
           observations: 'Sin observaciones',
         });
 
-        // Crear el usuario con la fecha de entrada
+        // Crear el usuario con isActive del archivo de datos
         const user = this.userRepository.create({
           ...userData,
           role, // Asociar el rol encontrado
           healthSheet, // Asociar la hoja de salud
-          isActive: true, // Establecer isActive por defecto
         });
 
         await this.userRepository.save(user);
-        console.log(`Usuario ${user.name} creado.`);
+        console.log(`Usuario ${user.name} creado. Activo: ${user.isActive}`);
       }
     }
   }

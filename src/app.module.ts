@@ -19,6 +19,8 @@ import { Payment } from './entities/payments.entity';
 import { RoutineUserSeederService } from './seeders/routineuser-seeder.services';
 import { Routine } from './entities/routine.entity';
 import { RoutineSeederModule } from './seeders/seeders.routine.module';
+import { HealthSeederModule } from './seeders/seeder.health.module';
+import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
 
 @Module({
   imports: [
@@ -28,11 +30,6 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     TypeOrmModule.forRootAsync({
       imports: [
         ConfigModule,
-        JwtModule.register({
-          global: true,
-          secret: process.env.JWT_SECRET,
-          signOptions: { expiresIn: '5h' },
-        }),
       ],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -48,6 +45,11 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET || 'mySuperSecretKey',
+      signOptions: { expiresIn: '1h' },
+    }),
     RoutinesModule,
     LevelsModule,
     UserModule,
@@ -56,6 +58,7 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     UserSeederModule,
     PaySeederModule,
     RoutineSeederModule,
+    HealthSeederModule,
     RoutinesModule,
     TypeOrmModule.forFeature([
       User,
@@ -67,10 +70,8 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
     ]),
   ],
   controllers: [],
-  providers: [
-    UserSeederService,
-    PayUserSeederService,
-    RoutineUserSeederService,
-  ],
+
+  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService,HealthUserSeederService],
+
 })
 export class AppModule {}
