@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { loggerGlobal } from './middlewares/logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,8 @@ async function bootstrap() {
     swaggerOptions: { tagsSorter: 'alpha' },
     customSiteTitle: 'PF - FITMANAGER',
   });
+
+  app.use(loggerGlobal);
 
   app.enableCors({
     origin: 'http://localhost:3001',
