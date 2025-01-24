@@ -1,25 +1,53 @@
-import { Controller, Get, Body, Param, Delete, ParseUUIDPipe, Put } from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, ParseUUIDPipe, Put, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from '../dtos/update-user.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { Role } from 'src/auth/guards/roles.enum';
+import { Request } from 'express';
+
+declare module 'express' {
+  interface Request {
+    user?: { id: string; email: string }; // Define aquí las propiedades que esperas en `user`
+  }
+}
+
 
 @ApiTags('users')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiBearerAuth()
   @Get()
-  @ApiOperation({ summary: 'Obtener todos los usuarios' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ 
+    summary: 'Obtener todos los usuarios',
+    description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.'
+  })
   @ApiResponse({
     status: 200,
     description: 'Usuarios encontrados exitosamente.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado. Solo Administradores pueden acceder.',
   })
   findAll() {
     return this.userService.findAll();
   }
 
+  @ApiBearerAuth()
   @Get(':id')
-  @ApiOperation({ summary: 'Obtener un usuario por ID' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin, Role.Coach)
+  @ApiOperation({ 
+    summary: 'Obtener un usuario por ID',
+    description: 'Los roles permitidos para acceder a este endpoint son: **Administrador** y **Entrenador**.',
+  })
   @ApiParam({
     name: 'id',
     type: String,
@@ -31,6 +59,10 @@ export class UserController {
     description: 'Usuario encontrado exitosamente.',
   })
   @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado. Solo Administradores y Entrenadores pueden acceder.',
+  })
+  @ApiResponse({
     status: 404,
     description: 'No se encontró el usuario con el ID especificado.',
   })
@@ -38,8 +70,14 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @Put(':id')
-  @ApiOperation({ summary: 'Actualizar un usuario por ID' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ 
+    summary: 'Actualizar un usuario por ID',
+    description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.',
+  })
   @ApiParam({
     name: 'id',
     type: String,
@@ -59,6 +97,10 @@ export class UserController {
     description: 'Datos inválidos proporcionados.',
   })
   @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado. Solo Administradores pueden acceder.',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Usuario no encontrado.',
   })
@@ -68,8 +110,14 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un usuario por ID' })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ 
+    summary: 'Eliminar un usuario por ID',
+    description: 'Solo los usuarios con rol de Administrador tienen acceso a este endpoint.',
+  })
   @ApiParam({
     name: 'id',
     type: String,
@@ -79,6 +127,10 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Usuario eliminado exitosamente.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado. Solo Administradores pueden acceder.',
   })
   @ApiResponse({
     status: 404,

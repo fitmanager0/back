@@ -2,18 +2,54 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Routine } from '../entities/routine.entity';
+import { User } from '../entities/user.entity';
+import { Level } from '../entities/level.entity';
 import { CreateRoutineDto } from '../dtos/create-routine.dto';
-import { UpdateRoutineDto } from '../dtos/update-routine.dto';
 
 @Injectable()
 export class RoutinesService {
   constructor(
     @InjectRepository(Routine)
     private readonly routineRepository: Repository<Routine>,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Level)
+    private readonly levelRepository: Repository<Level>,
   ) {}
 
-  async create(createRoutineDto: CreateRoutineDto): Promise<Routine> {
-    const newRoutine = this.routineRepository.create(createRoutineDto);
+  // Asocia la rutina a un usuario y nivel existentes
+  async associateRoutine(createRoutineDto: CreateRoutineDto): Promise<Routine> {
+    // Buscar si existe el usuario con el ID proporcionado
+    const user = await this.userRepository.findOne({
+      where: { id_user: createRoutineDto.id_user },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${createRoutineDto.id_user} not found`);
+    }
+
+    // Convertir el id_level de string a number si es necesario
+    const levelId = parseInt(createRoutineDto.id_level, 10); // Aquí convertimos el ID a un número
+
+    // Buscar si existe el nivel con el ID proporcionado
+    const level = await this.levelRepository.findOne({
+      where: { id_level: levelId },
+    });
+
+    if (!level) {
+      throw new NotFoundException(`Level with ID ${createRoutineDto.id_level} not found`);
+    }
+
+    // Crear una nueva rutina asociada al usuario y al nivel
+    const newRoutine = this.routineRepository.create({
+      url_routine: createRoutineDto.url_routine,
+      user,   // Asociamos el usuario
+      level,  // Asociamos el nivel
+    });
+
+    // Guardamos la nueva rutina en la base de datos
     return this.routineRepository.save(newRoutine);
   }
 
@@ -32,8 +68,8 @@ export class RoutinesService {
     return routine;
   }
 
-  async update(id: string, updateRoutineDto: UpdateRoutineDto): Promise<Routine> {
-    await this.findOne(id); 
+  async update(id: string, updateRoutineDto: any): Promise<Routine> {
+    await this.findOne(id);
     await this.routineRepository.update(id, updateRoutineDto);
     return this.findOne(id);
   }
