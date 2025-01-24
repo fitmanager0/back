@@ -70,8 +70,6 @@ import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
     ]),
   ],
   controllers: [],
-
   providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService,HealthUserSeederService],
-
 })
 export class AppModule {}
