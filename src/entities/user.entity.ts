@@ -103,10 +103,9 @@ export class User {
 
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
   @OneToOne(() => HealthSheet, (healthSheet) => healthSheet.user, {
-    nullable: true,
-    onDelete: 'SET NULL', // Esto asegura que no se rompa la relación si se elimina el HealthSheet
+    cascade: true,
+    onDelete: 'CASCADE', // Cambiar a CASCADE en lugar de SET NULL
   })
-  @JoinColumn({ name: 'id_user' })
   healthSheet: HealthSheet | null;
 
   @ApiProperty({ description: 'Pagos asociados al usuario' })

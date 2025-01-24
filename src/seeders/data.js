@@ -8,9 +8,9 @@ const data = {
     { id_role: 3, description: "socio" },
   ],
   levels: [
-    { id_level: uuidv4(), description: "Inicial" },
-    { id_level: uuidv4(), description: "Intermedio" },
-    { id_level: uuidv4(), description: "Avanzado" },
+    { id_level: 1, description: "Inicial" },
+    { id_level: 2, description: "Intermedio" },
+    { id_level: 3, description: "Avanzado" },
   ],
   users: [
     // Administrador
@@ -20,8 +20,9 @@ const data = {
       email: "admin@example.com",
       password: "hashed-password",
       id_rol: 1,
-      phone: "+1234567890", 
+      phone: "+1234567890",
       entry_date: new Date().toISOString(),
+      isActive: true, // Siempre activo
     },
     // Entrenadores
     {
@@ -30,8 +31,9 @@ const data = {
       email: "trainer1@example.com",
       password: "hashed-password",
       id_rol: 2,
-      phone: "+1987654321", 
+      phone: "+1987654321",
       entry_date: new Date().toISOString(),
+      isActive: true, // Siempre activo
     },
     {
       id_user: uuidv4(),
@@ -41,6 +43,7 @@ const data = {
       id_rol: 2,
       phone: "+1123456789",
       entry_date: new Date().toISOString(),
+      isActive: true, // Siempre activo
     },
     // Socios
     ...Array.from({ length: 50 }, (_, i) => {
@@ -55,6 +58,7 @@ const data = {
         id_rol: 3, // Rol de socio
         phone: `+12345678${i + 10}`, // Generar números de teléfono como strings
         entry_date: date.toISOString(),
+        isActive: i % 2 === 0, // Alternar entre activo/inactivo
       };
     }),
   ],
