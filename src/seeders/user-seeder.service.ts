@@ -48,11 +48,12 @@ export class UserSeederService implements OnModuleInit {
           continue;
         }
 
-        // Crear la hoja de salud asociada
+        // Crear la hoja de salud asociada (marcada como temporal)
         const healthSheet = await this.healthSheetRepository.save({
           id_sheet: userData.id_user,
           urlSheet: `https://example.com/healthsheet-${userData.id_user}.pdf`,
           observations: 'Sin observaciones',
+          isTemporary: true, // Marcar como temporal
         });
 
         // Crear el usuario con isActive del archivo de datos

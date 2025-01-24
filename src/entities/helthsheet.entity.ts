@@ -32,4 +32,11 @@ export class HealthSheet {
     example: 'https://res.cloudinary.com/dj0v6zokk',
   })
   urlSheet: string;
+
+  @Column({ default: false })
+  @ApiProperty({
+    description: 'Indica si la ficha médica es temporal',
+    example: true,
+  })
+  isTemporary: boolean;
 }
