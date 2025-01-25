@@ -87,24 +87,25 @@ export class AuthController {
   //   res.json(user);
   // }
 
-  // @Post('complete-registration')
-  // async completeRegistration(@Body() userDto: CreateUserDto) {
-  //   return this.authService.signup(userDto); // Reutiliza el método de registro
-  // }
+  
   @Post('auth0/callback')
-  async auth0Callback(@Body() body: { idToken: string }): Promise<{ user: User; token: string }> {
-  const { idToken } = body;
+    async auth0Callback(@Body() body: { idToken: string }): Promise<{ user: User; token: string }> {
+    const { idToken } = body;
 
-  if (!idToken) {
-    throw new Error('idToken is missing');
+    if (!idToken) {
+      throw new Error('idToken is missing');
+    }
+
+    // Simulando obtener datos del usuario (ejemplo)
+    const user = new User(); //'123', 'John Doe'
+    const token = 'fake-jwt-token'; // Aquí deberías generar un token válido.
+
+    return { user, token };
   }
 
-  // Simulando obtener datos del usuario (ejemplo)
-  const user = new User('123', 'John Doe');
-  const token = 'fake-jwt-token'; // Aquí deberías generar un token válido.
-
-  return { user, token };
-}
-
+  @Post('complete-registration')
+    async completeRegistration(@Body() userDto: CreateUserDto) {
+    return this.authService.signup(userDto); // Reutiliza el método de registro
+  }
 
 }
