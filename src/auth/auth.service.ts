@@ -11,6 +11,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { HealthSheet } from '../entities/helthsheet.entity';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -117,4 +118,36 @@ export class AuthService {
 
     return { mensaje: 'Logged in', token, user };
   }
+
+  async handleAuth0Login(idToken: string) {
+    // 1. Validar token con Auth0
+    const auth0Domain = process.env.AUTH0_DOMAIN;
+    const auth0ClientId = process.env.AUTH0_CLIENT_ID;
+
+    try {
+      const response = await axios.get(`https://${auth0Domain}/userinfo`, {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      const { email, name } = response.data;
+
+      // 2. Verificar si el usuario existe en tu base de datos
+      let user = await this.usersRepository.findOne({ where: { email } });
+      if (!user) {
+        // 3. Si no existe, crea uno nuevo (requiere datos adicionales)
+        throw new BadRequestException(
+          'Faltan datos adicionales para completar el registro.',
+        );
+      }
+
+      // 4. Generar token JWT para el sistema
+      const payload = { id: user.id_user, email: user.email, rol: user.id_rol };
+      const token = this.jwtService.sign(payload);
+
+      return { user, token };
+    } catch (error) {
+      throw new BadRequestException('Error al validar el token de Auth0.');
+    }
+  }
+
+
 }

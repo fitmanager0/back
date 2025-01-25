@@ -10,7 +10,9 @@ export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,  
+    private readonly userRepository: Repository<User>,
+    public id: string,
+    public name: string,  
   ) {}
 
   async findAll() {

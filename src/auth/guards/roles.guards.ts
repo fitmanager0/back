@@ -15,11 +15,6 @@ export class RolesGuard implements CanActivate {
       return true; // Permite el acceso si es público
     }
     
-
-
-    
-    
-    
     // Obtenemos los roles requeridos de la metadata del decorador @Roles
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),
