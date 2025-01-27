@@ -148,6 +148,4 @@ export class AuthService {
       throw new BadRequestException('Error al validar el token de Auth0.');
     }
   }
-
-
 }

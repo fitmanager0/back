@@ -3,7 +3,10 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { loggerGlobal } from './middlewares/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
-import * as express from 'express';
+//import * as express from 'express';
+import { auth } from 'express-openid-connect';
+import { config as auth0Config } from './config/auth0.config'
+import express, { Request, Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,8 +31,11 @@ async function bootstrap() {
     credentials: true,
   });
 
-    // Habilitar middleware para procesar JSON
-  app.useGlobalPipes(new ValidationPipe());
+  //app.use(auth(auth0Config));
+  // Aquí debes incluir las variables de entorno para Auth0
+
+  // Habilitar middleware para procesar JSON
+  app.useGlobalPipes(new ValidationPipe())
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
