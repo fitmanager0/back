@@ -21,6 +21,7 @@ import { Routine } from './entities/routine.entity';
 import { RoutineSeederModule } from './seeders/seeders.routine.module';
 import { HealthSeederModule } from './seeders/seeder.health.module';
 import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
+import { HealthsheetModule } from './healthsheet/healthsheet.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
     RoutineSeederModule,
     HealthSeederModule,
     RoutinesModule,
+    HealthsheetModule,
     TypeOrmModule.forFeature([
       User,
       Role,
