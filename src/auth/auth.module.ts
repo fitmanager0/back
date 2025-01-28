@@ -11,27 +11,29 @@ import { JwtStrategy } from './guards/jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, HealthSheet]),
-    PassportModule.register({ defaultStrategy: 'jwt' }), // Configuración de Passport
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'mySuperSecretKey', // Asegúrate de cambiar 'secretKey' por tu clave secreta
-      signOptions: { expiresIn: '1h' }, // Opcional: configurar el tiempo de expiración del token
+      secret: process.env.JWT_SECRET || 'mySuperSecretKey',
+      signOptions: { expiresIn: '1h' },
     }),
-    UserModule
+    ConfigModule,
+    UserModule,
   ],
   providers: [
-    AuthService, 
-    AuthRepository, 
+    AuthService,
+    AuthRepository,
     JwtStrategy,
     AuthGuard,
     Reflector,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard, // Configura AuthGuard como guardián global
+      useClass: AuthGuard,
     },
   ],
   controllers: [AuthController],

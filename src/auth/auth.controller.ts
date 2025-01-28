@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Req,
+  Res,
   Body,
   BadRequestException,
   NotFoundException,
@@ -11,17 +13,18 @@ import { LoginUserDto } from '../dtos/LoginUserDto';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from './guards/public.decorator';
+import { Request, Response } from 'express';
 
-@ApiTags('Auth: Registro e Inicio de Sesión') 
+@ApiTags('Auth: Registro e Inicio de Sesión')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('/signup')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Registrar un nuevo usuario (Public)',
-    description: 'Registro de nuevos usuarios, acceso puclico.'
+    description: 'Registro de nuevos usuarios, acceso público.'
   })
   @ApiResponse({
     status: 201,
@@ -41,9 +44,9 @@ export class AuthController {
 
   @Public()
   @Post('/signin')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Iniciar sesión de usuarios (Public)',
-    description: 'Inicio de seción de usuarios mediante autenticación ingresando correo electrónico y contraseña'
+    description: 'Inicio de sesión mediante correo electrónico y contraseña'
   })
   @ApiResponse({
     status: 200,
@@ -72,5 +75,28 @@ export class AuthController {
         error instanceof Error ? error.message : 'Error desconocido';
       throw new BadRequestException(`Error al iniciar sesión. ${errorMessage}`);
     }
+  }
+
+  @Public()
+  @Get('/login')
+  @ApiOperation({
+    summary: 'Redirigir a Auth0 para inicio de sesión',
+  })
+  async login(@Res() res: Response) {
+    const authUrl = this.authService.getAuth0LoginUrl();
+    return res.redirect(authUrl);
+  }
+
+  @Public()
+  @Get('/callback')
+  @ApiOperation({
+    summary: 'Procesar callback de Auth0',
+  })
+  async callback(@Req() req: Request, @Res() res: Response) {
+    const user = await this.authService.handleAuth0Callback(req.query);
+    if (!user.isProfileComplete) {
+      return res.redirect('/complete-profile');
+    }
+    return res.redirect('/dashboard');
   }
 }

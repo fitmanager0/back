@@ -123,4 +123,25 @@ export class User {
   })
   @JoinColumn({ name: 'id_rol' })
   role?: Role;
+
+  @ApiProperty({
+    description: 'Proveedor de autenticación. Ejemplo: local, auth0, google.',
+    example: 'auth0',
+  })
+  @Column({ type: 'varchar', nullable: true })
+  authProvider: string | null;
+
+  @ApiProperty({
+    description: 'Identificador único del proveedor externo (e.g., Auth0).',
+    example: 'auth0|123456789',
+  })
+  @Column({ type: 'varchar', nullable: true })
+  thirdPartyId: string | null;
+
+  @ApiProperty({
+    description: 'Indica si el usuario ha completado su perfil.',
+    example: true,
+  })
+  @Column({ type: 'boolean', default: false })
+  isProfileComplete: boolean;
 }
