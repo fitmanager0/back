@@ -1,37 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Payment } from 'mercadopago';
-import { MercadoPagoService } from '../mercadopago.service';
+import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 @Injectable()
 export class PaymentService {
+  private client: MercadoPagoConfig;
   private paymentApi: Payment;
 
-  constructor(private readonly mercadoPagoService: MercadoPagoService) {
-    const client = this.mercadoPagoService.getClient();
-    this.paymentApi = new Payment(client); // Inicializa la API de pagos
+  constructor() {
+    // Configuración del cliente de Mercado Pago
+    this.client = new MercadoPagoConfig({
+      accessToken: 'YOUR_ACCESS_TOKEN', // Reemplaza con tu token de Mercado Pago
+    });
+    this.paymentApi = new Payment(this.client); // Inicializa la API de pagos
   }
 
-  async createPayment(data: {
-    transaction_amount: number;
-    description: string;
-    payment_method_id: string;
-    payer: { email: string };
-  }) {
+  async createPayment(paymentData: any) {
     try {
-      const body = {
-        transaction_amount: data.transaction_amount,
-        description: data.description,
-        payment_method_id: data.payment_method_id,
-        payer: {
-          email: data.payer.email,
-        },
-      };
-
-    const response: any = await this.paymentApi.create({ body });
-    return response.body || response;
-
+      // Envía el cuerpo recibido al endpoint de Mercado Pago
+      const response = await this.paymentApi.create({ body: paymentData });
+      return response.body; // Devuelve la respuesta de Mercado Pago
     } catch (error) {
-      throw new Error(`Error creating payment: ${error.message}`);
+      throw new Error(`Error creando el pago: ${error.message}`);
     }
   }
 }

@@ -30,9 +30,7 @@ import { MercadoPagoModule } from './mercadopago/mercadopago.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [
-        ConfigModule,
-      ],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -74,6 +72,11 @@ import { MercadoPagoModule } from './mercadopago/mercadopago.module';
     MercadoPagoModule,
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService,HealthUserSeederService],
+  providers: [
+    UserSeederService,
+    PayUserSeederService,
+    RoutineUserSeederService,
+    HealthUserSeederService,
+  ],
 })
 export class AppModule {}

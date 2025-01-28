@@ -12,7 +12,12 @@ import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { Role } from 'src/auth/guards/roles.enum';
@@ -23,9 +28,10 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @ApiBearerAuth()
-  @ApiOperation({ 
-    summary: 'Obtener todos los pagos registrados (Admin)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.' 
+  @ApiOperation({
+    summary: 'Obtener todos los pagos registrados (Admin)',
+    description:
+      'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.',
   })
   @ApiResponse({ status: 200, description: 'Retorna todos los pagos.' })
   @ApiResponse({ status: 401, description: 'No autorizado.' })
@@ -38,9 +44,10 @@ export class PaymentController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ 
-    summary: 'Obtener un pago por ID (Admin)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.' 
+  @ApiOperation({
+    summary: 'Obtener un pago por ID (Admin)',
+    description:
+      'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.',
   })
   @ApiResponse({ status: 200, description: 'Retorna un pago específico.' })
   @ApiResponse({ status: 404, description: 'Pago no encontrado.' })
@@ -54,9 +61,10 @@ export class PaymentController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ 
-    summary: 'Generar un nuevo pago (Admin)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.' 
+  @ApiOperation({
+    summary: 'Generar un nuevo pago (Admin)',
+    description:
+      'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.',
   })
   @ApiResponse({ status: 201, description: 'Pago creado exitosamente.' })
   @ApiResponse({ status: 400, description: 'Solicitud incorrecta.' })
@@ -70,9 +78,10 @@ export class PaymentController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ 
-    summary: 'Actualizar detalles de un pago (Admin)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.' 
+  @ApiOperation({
+    summary: 'Actualizar detalles de un pago (Admin)',
+    description:
+      'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.',
   })
   @ApiResponse({ status: 200, description: 'Pago actualizado exitosamente.' })
   @ApiResponse({ status: 404, description: 'Pago no encontrado.' })
@@ -86,9 +95,10 @@ export class PaymentController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ 
-    summary: 'Eliminar un pago (Admin)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.' 
+  @ApiOperation({
+    summary: 'Eliminar un pago (Admin)',
+    description:
+      'Esta ruta está protegida, solo los usuarios con rol de Admin pueden acceder.',
   })
   @ApiResponse({ status: 200, description: 'Pago eliminado exitosamente.' })
   @ApiResponse({ status: 404, description: 'Pago no encontrado.' })
