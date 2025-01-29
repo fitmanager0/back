@@ -123,4 +123,21 @@ export class User {
   })
   @JoinColumn({ name: 'id_rol' })
   role?: Role;
+
+  @ApiProperty({
+    description: 'Tipo de ingreso al sistema.',
+    example: 'google',
+  })
+  @Column({ type: 'varchar', length: 20, default: 'local' })
+  provider: 'local' | 'google';
+
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  providerId?: string;
+
+  @ApiProperty({
+    description: 'Muestra si el usuario le faltan datos para completar su perfil.',
+    example: 'false',
+  })
+  @Column({ type: 'boolean', default: false })
+  isProfileComplete: boolean;
 }
