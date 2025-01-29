@@ -77,6 +77,8 @@ export class AuthController {
       throw new BadRequestException(`Error al iniciar sesión. ${errorMessage}`);
     }
   }
+
+  
   @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
