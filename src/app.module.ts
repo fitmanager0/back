@@ -59,7 +59,6 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     UserSeederModule,
     PaySeederModule,
     RoutineSeederModule,
-    HealthSeederModule,
     RoutinesModule,
     HealthsheetModule,
     TypeOrmModule.forFeature([
@@ -72,6 +71,6 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     ]),
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService,HealthUserSeederService],
+  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService],
 })
 export class AppModule {}
