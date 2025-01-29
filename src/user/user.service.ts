@@ -92,13 +92,16 @@ export class UserService {
 
     const updatedUser = this.userRepository.create({ ...user, ...updatePersonalInfoDto });
     await this.userRepository.save(updatedUser);
-
+    
+    const refreshedUser = await this.userRepository.findOne({ where: { id_user: id } });
     const formattedFields = updatedFields.map((field) => `'${field}'`).join(', ');
-  
+    
     return {
       id,
       message: `Información personal del usuario actualizada con éxito. Campos modificados: ${formattedFields}`,
+      user: refreshedUser, 
     };
+    
   }
 
   
