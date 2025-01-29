@@ -1,4 +1,3 @@
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, IsEmail, IsOptional, IsDateString, Length, MaxLength, IsDate, MinDate, MaxDate, IsNotEmpty, ValidateIf, Validate, Matches } from 'class-validator';
@@ -36,7 +35,7 @@ export class UpdatePersonalInfoDto {
         description: 'Confirmación del password del usuario que quiere registrarse. Debe ser un String. Como requisitos debe incluir una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*) como mínimo y tener una loguitud de 8 y 15 caracteres. Es campo obligatorio.',
         example: 'Password#123',
     })
-    @ValidateIf((o) => o.password !== undefined) // Validar si `password` es enviado
+    @ValidateIf((o) => o.password !== undefined || o.confirmPassword !== undefined) // Validar si `password` es enviado
     @IsString({
         message: 'El campo Confirmar Contraseña debe contener caracteres válidos a una cadena de texto.',
     })
@@ -88,7 +87,7 @@ export class UpdatePersonalInfoDto {
     @MaxLength(50, { message: 'La ciudad no debe exceder los 50 caracteres.' })
     city?: string;
     
-    
+
     @ApiProperty({
         description: 'País del usuario',
         example: 'Argentina',

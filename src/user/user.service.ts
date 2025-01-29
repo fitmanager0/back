@@ -74,6 +74,13 @@ export class UserService {
       };
     }
     
+    if (
+      (updatePersonalInfoDto.password && !updatePersonalInfoDto.confirmPassword) ||
+      (!updatePersonalInfoDto.password && updatePersonalInfoDto.confirmPassword)
+    ) {
+      throw new BadRequestException('Debes ingresar ambos campos: contraseña y confirmación.');
+    }
+
     if (updatePersonalInfoDto.password && updatePersonalInfoDto.confirmPassword){
       if(updatePersonalInfoDto.password !== updatePersonalInfoDto.confirmPassword) {
         throw new BadRequestException('Las contraseñas no coinciden.');
