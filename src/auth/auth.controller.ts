@@ -5,12 +5,16 @@ import {
   Body,
   BadRequestException,
   NotFoundException,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from '../dtos/LoginUserDto';
 import { CreateUserDto } from '../dtos/CreateUserDto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from './guards/public.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { CompleteUserDto } from 'src/dtos/CompleteUserDto';
 
 @ApiTags('Auth: Registro e Inicio de Sesión') 
 @Controller('auth')
@@ -72,5 +76,66 @@ export class AuthController {
         error instanceof Error ? error.message : 'Error desconocido';
       throw new BadRequestException(`Error al iniciar sesión. ${errorMessage}`);
     }
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({
+    summary: 'Callback de Google OAuth (Public)',
+    description:
+      'Este endpoint es llamado por Google después de que el usuario autoriza la aplicación. ' +
+      'Maneja la lógica de inicio de sesión y devuelve un token JWT.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Inicio de sesión exitoso. Devuelve un token JWT y los datos del usuario.',
+    schema: {
+      example: {
+        mensaje: 'Logged in with Google',
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        user: {
+          email: 'user@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          picture: 'https://example.com/profile.jpg',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error: No se pudo obtener el usuario de Google.',
+  })
+  async googleAuth() {}
+
+  @Public()
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req) {
+    return this.authService.googleLogin(req);
+  }
+
+  // @Post('complete-profile')
+  //   async completeProfile(@Body() profileData: any, @Req() req) {
+  //   return this.authService.completeUserProfile(req.user.id, profileData);
+  // }
+  @Public()
+  @Post('complete-profile')
+  @ApiOperation({
+    summary: 'Completar el registro de usuario autenticado con Google',
+    description: 'Este endpoint permite completar los datos faltantes de un usuario autenticado con Google.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Registro completado con éxito.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error en la solicitud.',
+  })
+  @ApiBody({ type: CompleteUserDto })
+  async completeProfile(@Body() profileData: CompleteUserDto, @Req() req) {
+    return this.authService.completeUserProfile(req.user.id, profileData);
   }
 }

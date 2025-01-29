@@ -11,6 +11,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { HealthSheet } from '../entities/helthsheet.entity';
+import { CompleteUserDto } from 'src/dtos/CompleteUserDto';
 
 @Injectable()
 export class AuthService {
@@ -116,5 +117,91 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { mensaje: 'Logged in', token, user };
+  }
+
+
+  
+  // async validateGoogleUser(providerId: string, name: string, email: string) {
+  //   let user = await this.usersRepository.findOne({ where: { providerId } });
+
+  //   if (!user) {
+  //     user = this.usersRepository.create({
+  //       provider: 'google',
+  //       providerId,
+  //       name,
+  //       email,
+  //       isProfileComplete: false,
+  //     });
+  //     await this.usersRepository.save(user);
+  //   }
+
+  //   const payload = { id: user.id_user, email: user.email };
+  //   return { token: this.jwtService.sign(payload), user };
+  // }
+
+  async validateGoogleUser(providerId: string, name: string, email: string) {
+    let user = await this.usersRepository.findOne({ where: { providerId } });
+  
+    if (!user) {
+      user = this.usersRepository.create({
+        id_rol: 3, // Asignamos el rol por defecto
+        isActive: true, // Activamos el usuario por defecto
+        entry_date: new Date(), // Asignamos la fecha de registro
+        provider: 'google',
+        providerId,
+        name,
+        email,
+        password: 'google', // Aquí ponemos una cadena vacía en lugar de null
+        isProfileComplete: false,
+      });
+  
+      await this.usersRepository.save(user);
+    }
+  
+    const payload = { id: user.id_user, email: user.email };
+    return { token: this.jwtService.sign(payload), user };
+  }
+  
+
+  async googleLogin(req) {
+    if (!req.user) {
+      return 'No se recibió usuario de Google';
+    }
+    return req.user;
+  }
+
+  // async completeUserProfile(userId: string, profileData: any) {
+  //   const user = await this.usersRepository.findOne({ where: { id_user: userId } });
+
+  //   if (!user) {
+  //     throw new Error('Usuario no encontrado');
+  //   }
+
+  //   user.name = profileData.name || user.name;
+  //   user.isProfileComplete = true;
+  //   // Aquí puedes añadir más campos del perfil según la necesidad
+
+  //   await this.usersRepository.save(user);
+
+  //   return { message: 'Perfil completado exitosamente', user };
+  // }
+
+  async completeUserProfile(userId: string, profileData: CompleteUserDto) {
+    const user = await this.usersRepository.findOne({ where: { id_user: userId } });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    user.birthdate = profileData.birthdate || user.birthdate;
+    user.phone = profileData.phone || user.phone;
+    user.address = profileData.address || user.address;
+    user.city = profileData.city || user.city;
+    user.country = profileData.country || user.country;
+    user.isProfileComplete = true; // Se fuerza a true
+
+    await this.usersRepository.save(user);
+
+    return { message: 'Perfil completado exitosamente', user };
   }
 }

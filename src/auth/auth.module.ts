@@ -11,6 +11,7 @@ import { JwtStrategy } from './guards/jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { GoogleStrategy } from 'src/config/google.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthGuard } from './guards/auth.guard';
     AuthService, 
     AuthRepository, 
     JwtStrategy,
+    GoogleStrategy,
     AuthGuard,
     Reflector,
     {
