@@ -71,6 +71,6 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     ]),
   ],
   controllers: [],
-  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService],
+  providers: [UserSeederService,PayUserSeederService,RoutineUserSeederService] ,
 })
 export class AppModule {}
