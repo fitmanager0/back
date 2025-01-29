@@ -14,6 +14,7 @@ import { CreateUserDto } from '../dtos/CreateUserDto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from './guards/public.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { CompleteUserDto } from 'src/dtos/complete-user.dto';
 
 @ApiTags('Auth: Registro e Inicio de Sesión') 
 @Controller('auth')
@@ -122,5 +123,25 @@ export class AuthController {
   googleAuthRedirect(@Req() req) {
     return this.authService.googleLogin(req);
   }
+
+  @Public()
+  @Post('complete-registration')
+  @ApiOperation({
+    summary: 'Completar el registro de usuario autenticado con Google',
+    description: 'Este endpoint permite completar los datos faltantes de un usuario autenticado con Google.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Registro completado con éxito.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error en la solicitud.',
+  })
+  @ApiBody({ type: CompleteUserDto })
+  async completeRegistration(@Req() req, @Body() completeUserDto: CompleteUserDto) {
+    return this.authService.completeRegistration(req.user.email, completeUserDto);
+  }
+
 
 }

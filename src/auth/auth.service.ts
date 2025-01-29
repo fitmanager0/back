@@ -11,6 +11,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { HealthSheet } from '../entities/helthsheet.entity';
+import { CompleteUserDto } from 'src/dtos/complete-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -150,5 +151,22 @@ export class AuthService {
   
     return { mensaje: 'Logged in with Google', token, user };
   }  
+
+
+  async completeRegistration(email: string, completeUserDto: CompleteUserDto) {
+    const user = await this.usersRepository.findOne({ where: { email } });
+  
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado.');
+    }
+  
+    // Actualizar solo los campos enviados
+    Object.assign(user, completeUserDto);
+  
+    await this.usersRepository.save(user);
+  
+    return { message: 'Registro completado exitosamente.', user };
+  }
+  
 
 }
