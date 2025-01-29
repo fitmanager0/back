@@ -144,6 +144,4 @@ export class AuthController {
   async completeRegistration(@Req() req, @Body() completeUserDto: CompleteUserDto) {
     return this.authService.completeRegistration(req.user.email, completeUserDto);
   }
-
-
 }

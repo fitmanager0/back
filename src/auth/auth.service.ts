@@ -120,6 +120,38 @@ export class AuthService {
   }
 
 
+  // async googleLogin(req) {
+  //   if (!req.user) {
+  //     throw new BadRequestException('No user from Google');
+  //   }
+  
+  //   const { email, firstName, lastName, picture } = req.user;
+  
+  //   let user = await this.usersRepository.findOne({ where: { email } });
+  
+  //   if (!user) {
+  //     user = this.usersRepository.create({
+  //       email,
+  //       name: `${firstName} ${lastName}`,
+  //       password: '', // No necesitas contraseña para autenticación de terceros
+  //       id_rol: 3, // Rol por defecto
+  //       birthdate: null, // Se pedirá en el frontend
+  //       phone: '',
+  //       address: '',
+  //       city: '',
+  //       country: '',
+  //       entry_date: new Date(),
+  //       isActive: true,
+  //     });
+  //     await this.usersRepository.save(user);
+  //   }
+  
+  //   const payload = { id: user.id_user, email: user.email, rol: user.id_rol };
+  //   const token = this.jwtService.sign(payload);
+  
+  //   return { mensaje: 'Logged in with Google', token, user };
+  // }  
+
   async googleLogin(req) {
     if (!req.user) {
       throw new BadRequestException('No user from Google');
@@ -133,8 +165,8 @@ export class AuthService {
       user = this.usersRepository.create({
         email,
         name: `${firstName} ${lastName}`,
-        password: '', // No necesitas contraseña para autenticación de terceros
-        id_rol: 3, // Rol por defecto
+        password: '',
+        id_rol: 3,
         birthdate: null, // Se pedirá en el frontend
         phone: '',
         address: '',
@@ -149,8 +181,12 @@ export class AuthService {
     const payload = { id: user.id_user, email: user.email, rol: user.id_rol };
     const token = this.jwtService.sign(payload);
   
-    return { mensaje: 'Logged in with Google', token, user };
-  }  
+    // Verificar si el usuario tiene datos completos
+    const isComplete = user.birthdate && user.phone && user.address ? true : false;
+  
+    return { mensaje: 'Logged in with Google', token, user, isComplete };
+  }
+  
 
 
   async completeRegistration(email: string, completeUserDto: CompleteUserDto) {
@@ -167,6 +203,4 @@ export class AuthService {
   
     return { message: 'Registro completado exitosamente.', user };
   }
-  
-
 }
