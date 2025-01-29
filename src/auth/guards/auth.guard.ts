@@ -12,22 +12,12 @@ export class AuthGuard {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-
-
-
-
-    
+  
     // Verifica si la ruta tiene la metadata "isPublic"
     const isPublic = this.reflector.get<boolean>('isPublic', context.getHandler());
     if (isPublic) {
       return true; // Permite el acceso si es público
     }
-
-
-
-
-
-
 
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'];
