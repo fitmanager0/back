@@ -122,8 +122,11 @@ export class AuthController {
     status: 400,
     description: 'Error: No se pudo obtener el usuario de Google.',
   })
-  googleAuthRedirect(@Req() req) {
-    return this.authService.googleLogin(req);
+  async googleAuthRedirect(@Req() req) {
+    const result = await this.authService.googleLogin(req);
+  
+    const redirectUrl = `http://localhost:3001/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`;
+    req.res.redirect(redirectUrl);
   }
 
   @Public()
