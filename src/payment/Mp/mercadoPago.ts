@@ -1,83 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import mercadopago from 'mercadopago';
-import type { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
+import * as mercadopago from 'mercadopago';
 
 @Injectable()
 export class MercadoPagoService {
-  constructor(private configService: ConfigService) {
-    // Configuramos MercadoPago con el token de acceso
-    const accessToken = this.configService.get<string>('MP_ACCESS_TOKEN');
-    if (!accessToken) {
-      throw new Error(
-        'MP_ACCESS_TOKEN no está definido en las variables de entorno',
-      );
-    }
-
-    mercadopago.configure({
-      access_token: accessToken,
-    });
+  constructor() {
+    mercadopago.configurations.setAccessToken(
+      process.env.MERCADOPAGO_ACCESS_TOKEN ||
+        'APP_USR-3549561525679930-012917-7126929ae757c57e1358abbcf1041373-2238960556',
+    );
   }
 
-  // Crear una preferencia de pago
-  async createPreference(product: { title: string; price: number }) {
-    const URL = this.configService.get<string>('NOTIFICATION_URL');
-    const FRONTEND_URL = this.configService.get<string>('FRONTEND_URL');
-
-    try {
-      const preference: CreatePreferencePayload = {
-        items: [
-          {
-            title: product.title,
-            unit_price: product.price,
-            quantity: 1,
-          },
-        ],
-        auto_return: 'approved',
-        back_urls: {
-          success: `${FRONTEND_URL}/success`,
-          failure: `${FRONTEND_URL}/failure`,
-          pending: `${FRONTEND_URL}/pending`,
+  async createPreference(preference: { title: string; price: number }) {
+    const preferenceData = {
+      items: [
+        {
+          title: preference.title,
+          unit_price: preference.price,
+          quantity: 1,
         },
-        notification_url: `${URL}/payment/notify`,
-      };
+      ],
+    };
 
-      // Crear la preferencia con MercadoPago
-      const response = await mercadopago.preferences.create(preference);
-
-      // Retornar la URL de redirección
-      return { url: response.body.init_point };
+    try {
+      console.log('Creando preferencia con datos:', preferenceData);
+      const response = await mercadopago.preferences.create(preferenceData);
+      console.log('Respuesta de MercadoPago:', response.body);
+      return { init_point: response.body.init_point };
     } catch (error) {
-      console.error('Error al crear la preferencia de Mercado Pago:', error);
-      throw new Error('Error al generar la preferencia');
+      console.error('Error creando preferencia:', error.message);
+      throw new Error(`Error creating preference: ${error.message}`);
     }
   }
 
-  // Manejar las notificaciones de MercadoPago
-  async handleNotification(query: any) {
-    const topic = query.topic || query.type;
+  async handleNotification(notification: any) {
+    console.log('Procesando notificación de MercadoPago:', notification);
 
-    try {
-      if (topic === 'payment') {
-        const paymentId = query.id || query['data.id'];
+    const { type, data } = notification;
 
-        // Buscar el pago por ID
-        const payment = await mercadopago.payment.get(paymentId);
-        const paymentStatus = payment.body.status;
-
-        console.log('Estado del pago:', paymentStatus);
-
-        // Aquí puedes implementar lógica adicional
-        return { status: 'success', paymentStatus };
-      }
-
-      throw new Error('Notificación desconocida');
-    } catch (error) {
-      console.error(
-        'Error al procesar la notificación de Mercado Pago:',
-        error,
-      );
-      throw new Error('Error procesando la notificación');
+    if (notification.type === 'payment') {
+      const paymentInfo = await mercadopago.payment.get(notification.data.id);
+      return paymentInfo.body;
+    } else {
+      console.warn('Tipo de notificación no soportado:', notification.type);
     }
+
+    console.warn('Tipo de notificación no soportado:', type);
+    return { message: 'Notificación procesada' };
   }
 }

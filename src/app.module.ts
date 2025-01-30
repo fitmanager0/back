@@ -22,7 +22,7 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
 import { HealthSeederModule } from './seeders/seeder.health.module';
 import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
 import { HealthsheetModule } from './healthsheet/healthsheet.module';
-import { MercadoPagoModule } from './mercadopago/mercadopago.module';
+// import { MercadoPagoModule } from './mercadopago/mercadopago.module';
 
 @Module({
   imports: [
@@ -69,7 +69,7 @@ import { MercadoPagoModule } from './mercadopago/mercadopago.module';
       Payment,
       Routine,
     ]),
-    MercadoPagoModule,
+    // MercadoPagoModule,
   ],
   controllers: [],
   providers: [
