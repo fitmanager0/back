@@ -146,8 +146,6 @@ export class AuthService {
       await this.usersRepository.save(user);
     }
   
-
-    
     const payload = { id: user.id_user, email: user.email, rol: user.id_rol };
     const token = this.jwtService.sign(payload);
   
@@ -157,27 +155,19 @@ export class AuthService {
     return { mensaje: 'Logged in with Google', token, user, payload, isComplete };
   }
 
-
-
-
-
-
-
-
-
-
-  async completeRegistration(email: string, completeUserDto: CompleteUserDto) {
-    const user = await this.usersRepository.findOne({ where: { email } });
   
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado.');
-    }
+  // async completeRegistration(email: string, completeUserDto: CompleteUserDto) {
+  //   const user = await this.usersRepository.findOne({ where: { email } });
   
-    // Actualizar solo los campos enviados
-    Object.assign(user, completeUserDto);
+  //   if (!user) {
+  //     throw new NotFoundException('Usuario no encontrado.');
+  //   }
   
-    await this.usersRepository.save(user);
+  //   // Actualizar solo los campos enviados
+  //   Object.assign(user, completeUserDto);
   
-    return { message: 'Registro completado exitosamente.', user };
-  }
+  //   await this.usersRepository.save(user);
+  
+  //   return { message: 'Registro completado exitosamente.', user };
+  // }
 }

@@ -129,22 +129,23 @@ export class AuthController {
     req.res.redirect(redirectUrl);
   }
 
-  @Public()
-  @Post('complete-registration')
-  @ApiOperation({
-    summary: 'Completar el registro de usuario autenticado con Google',
-    description: 'Este endpoint permite completar los datos faltantes de un usuario autenticado con Google.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Registro completado con éxito.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Error en la solicitud.',
-  })
-  @ApiBody({ type: CompleteUserDto })
-  async completeRegistration(@Req() req, @Body() completeUserDto: CompleteUserDto) {
-    return this.authService.completeRegistration(req.user.email, completeUserDto);
-  }
+  
+  // @Public()
+  // @Post('complete-registration')
+  // @ApiOperation({
+  //   summary: 'Completar el registro de usuario autenticado con Google',
+  //   description: 'Este endpoint permite completar los datos faltantes de un usuario autenticado con Google.',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Registro completado con éxito.',
+  // })
+  // @ApiResponse({
+  //   status: 400,
+  //   description: 'Error en la solicitud.',
+  // })
+  // @ApiBody({ type: CompleteUserDto })
+  // async completeRegistration(@Req() req, @Body() completeUserDto: CompleteUserDto) {
+  //   return this.authService.completeRegistration(req.user.email, completeUserDto);
+  // }
 }
