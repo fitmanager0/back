@@ -132,7 +132,7 @@ export class AuthService {
     if (!user) {
       user = this.usersRepository.create({
         email,
-        name: `${firstName} ${lastName}`,
+        name: `${firstName} ${lastName || ''}`,
         password: '',
         id_rol: 3,
         birthdate: null, // Se pedirá en el frontend
