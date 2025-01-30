@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { MercadoPagoConfig, Payment } from 'mercadopago';
+import mercadopago from 'mercadopago';
 
 @Injectable()
 export class PaymentService {
-  private client: MercadoPagoConfig;
-  private paymentApi: Payment;
-
   constructor() {
     // Configuración del cliente de Mercado Pago
-    this.client = new MercadoPagoConfig({
-      accessToken: 'YOUR_ACCESS_TOKEN', // Reemplaza con tu token de Mercado Pago
+    mercadopago.configure({
+      access_token: 'YOUR_ACCESS_TOKEN', // Reemplaza con tu token de Mercado Pago
     });
-    this.paymentApi = new Payment(this.client); // Inicializa la API de pagos
   }
 
   async createPayment(paymentData: any) {
     try {
-      // Envía el cuerpo recibido al endpoint de Mercado Pago
-      const response = await this.paymentApi.create({ body: paymentData });
-      return response.body; // Devuelve la respuesta de Mercado Pago
+      // Crear un pago utilizando la API de MercadoPago
+      const response = await mercadopago.payment.create(paymentData);
+
+      // Retornar la respuesta del cuerpo
+      return response.body;
     } catch (error) {
+      console.error('Error creando el pago:', error);
       throw new Error(`Error creando el pago: ${error.message}`);
+    }
+  }
+
+  async getPaymentStatus(paymentId: number) {
+    try {
+      // Obtener el estado de un pago utilizando la API de MercadoPago
+      const response = await mercadopago.payment.get(paymentId);
+
+      // Retornar el estado del pago
+      return response.body;
+    } catch (error) {
+      console.error('Error obteniendo el estado del pago:', error);
+      throw new Error(`Error obteniendo el estado del pago: ${error.message}`);
     }
   }
 }
