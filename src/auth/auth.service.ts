@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { HealthSheet } from '../entities/helthsheet.entity';
 import { CompleteUserDto } from 'src/dtos/complete-user.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,8 @@ export class AuthService {
     private healthSheetRepository: Repository<HealthSheet>,
 
     private jwtService: JwtService,
+
+    private readonly mailService: MailService,
   ) {}
 
   async signup(user: CreateUserDto) {
@@ -88,9 +91,11 @@ export class AuthService {
 
     // Guardar usuario en la base de datos
     const savedUser = await this.usersRepository.save(newUser);
+    await this.mailService.sendWelcomeEmail(user.email, user.name);
 
     // Excluir la contraseña del usuario devuelto
     const { password, ...userWithoutSensitiveData } = savedUser;
+    await this.mailService.sendWelcomeEmail(user.email, user.name);
     return userWithoutSensitiveData;
   }
 
