@@ -36,7 +36,7 @@ export class MercadoPagoService {
         ],
         auto_return: "approved",
         back_urls: {
-          success: `${this.frontendURL}?status=approved`,
+          success: `http://localhost:3001/dashboard/user/payments/success`,
           failure: `${this.frontendURL}?status=failure`,
           pending: `${this.frontendURL}?status=pending`,
         },
