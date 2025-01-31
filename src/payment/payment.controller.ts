@@ -83,23 +83,6 @@ export class PaymentController {
     }
   }
 
-  @ApiOperation({
-    summary: 'Procesar notificaciones de MercadoPago',
-  })
-  @Post('notify')
-  async handleNotification(@Query() query: any) {
-    this.logger.log('Notificación recibida:', query);
-
-    try {
-      return await this.mercadoPagoService.handleNotification(query);
-    } catch (error) {
-      this.logger.error('Error al procesar notificación:', error.message);
-      throw new HttpException(
-        `Error al procesar notificación: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
 
   @ApiBearerAuth()
   @ApiOperation({
