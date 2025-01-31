@@ -11,6 +11,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../dtos/CreateUserDto';
 import { HealthSheet } from '../entities/helthsheet.entity';
+import { CompleteUserDto } from 'src/dtos/complete-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -117,4 +118,56 @@ export class AuthService {
 
     return { mensaje: 'Logged in', token, user };
   }
+
+  
+  async googleLogin(req) {
+    if (!req.user) {
+      throw new BadRequestException('No user from Google');
+    }
+  
+    const { email, firstName, lastName, picture } = req.user;
+  
+    let user = await this.usersRepository.findOne({ where: { email } });
+  
+    if (!user) {
+      user = this.usersRepository.create({
+        email,
+        name: `${firstName} ${lastName || ''}`,
+        password: '',
+        id_rol: 3,
+        birthdate: null, // Se pedirá en el frontend
+        phone: '',
+        address: '',
+        city: '',
+        country: '',
+        entry_date: new Date(),
+        isActive: true,
+      });
+      await this.usersRepository.save(user);
+    }
+  
+    const payload = { id: user.id_user, email: user.email, rol: user.id_rol };
+    const token = this.jwtService.sign(payload);
+  
+    // Verificar si el usuario tiene datos completos
+    const isComplete = user.birthdate && user.phone && user.address ? true : false;
+  
+    return { mensaje: 'Logged in with Google', token, user, payload, isComplete };
+  }
+
+  
+  // async completeRegistration(email: string, completeUserDto: CompleteUserDto) {
+  //   const user = await this.usersRepository.findOne({ where: { email } });
+  
+  //   if (!user) {
+  //     throw new NotFoundException('Usuario no encontrado.');
+  //   }
+  
+  //   // Actualizar solo los campos enviados
+  //   Object.assign(user, completeUserDto);
+  
+  //   await this.usersRepository.save(user);
+  
+  //   return { message: 'Registro completado exitosamente.', user };
+  // }
 }

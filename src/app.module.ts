@@ -58,7 +58,6 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     UserSeederModule,
     PaySeederModule,
     RoutineSeederModule,
-    HealthSeederModule,
     RoutinesModule,
     HealthsheetModule,
     TypeOrmModule.forFeature([
