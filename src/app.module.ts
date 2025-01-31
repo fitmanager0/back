@@ -22,6 +22,7 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
 import { HealthSeederModule } from './seeders/seeder.health.module';
 import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
 import { HealthsheetModule } from './healthsheet/healthsheet.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     RoutineSeederModule,
     RoutinesModule,
     HealthsheetModule,
+    StripeModule,
     TypeOrmModule.forFeature([
       User,
       Role,
