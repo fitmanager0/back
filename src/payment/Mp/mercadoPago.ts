@@ -6,7 +6,7 @@ import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create
 export class MercadoPagoService {
   private readonly logger = new Logger(MercadoPagoService.name);
   private readonly ngrokURL = 'https://4680-186-148-116-135.ngrok-free.app';
-  private readonly frontendURL = 'http://localhost:3001';
+  private readonly frontendURL = 'http://localhost:3001/home';
   private client: MercadoPagoConfig;
 
   constructor() {
@@ -37,9 +37,9 @@ export class MercadoPagoService {
         ],
         auto_return: 'approved',
         back_urls: {
-          success: `${this.frontendURL}/success`,
-          failure: `${this.frontendURL}/failure`,
-          pending: `${this.frontendURL}/pending`,
+          success: `${this.frontendURL}`,
+          failure: `${this.frontendURL}`,
+          pending: `${this.frontendURL}`,
         },
         notification_url: `${this.ngrokURL}/payment/notify`,
       },
@@ -72,8 +72,8 @@ export class MercadoPagoService {
       } catch (error) {
         this.logger.error('Error al obtener el pago:', error.message);
         throw new Error(`Error al obtener el pago: ${error.message}`);
-      }
     }
+  }
 
     this.logger.warn('Notificación no procesada');
     return { message: 'Notificación no procesada' };
