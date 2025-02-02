@@ -25,8 +25,11 @@ async function bootstrap() {
       'http://localhost:3001',
       'https://fitmanager-henry.vercel.app',
     ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    // credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
   });
 
   await app.listen(process.env.PORT ?? 3000);
