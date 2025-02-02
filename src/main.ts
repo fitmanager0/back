@@ -23,7 +23,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3001',
-      'https://fitmanager-git-develop-fitmanager0s-projects.vercel.app',
+      'https://fitmanager-henry.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
