@@ -44,6 +44,8 @@ import { MailService } from './mail.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { User } from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -65,6 +67,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
         defaults: {
           from: config.get<string>('EMAIL_FROM'),
+        },
+        template: {
+          dir: join(process.cwd(), 'src/templates'), //join(__dirname, '../templates'), //join(process.cwd(), 'src/templates')   // Asegura que está en la raíz de src
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
         },
       }),
     }),

@@ -39,40 +39,48 @@ export class MailService {
 //📩 1) Enviar correo de bienvenida
 
 
-    async sendWelcomeEmail(to: string, name: string) {
-        await this.mailerService.sendMail({
-        to,
-        subject: 'Bienvenido a FitManager, ' + name + ' 🎉',
-        from: 'fitmanager.henry@gmail.com', // Asegúrate de que este email esté autenticado en Brevo
-        replyTo: 'fitmanager.henry@gmail.com',
-        text: `Hola ${name},  
+    // async sendWelcomeEmail(to: string, name: string) {
+    //     await this.mailerService.sendMail({
+    //     to,
+    //     subject: 'Bienvenido a FitManager, ' + name + ' 🎉',
+    //     from: 'fitmanager.henry@gmail.com', // Asegúrate de que este email esté autenticado en Brevo
+    //     replyTo: 'fitmanager.henry@gmail.com',
+    //     text: `Hola ${name},  
         
-        ¡Bienvenido a FitManager! Estamos muy contentos de que te hayas unido a nuestra comunidad.  
+    //     ¡Bienvenido a FitManager! Estamos muy contentos de que te hayas unido a nuestra comunidad.  
 
-        Aquí tienes algunos recursos para empezar:  
-        - Accede a tu cuenta: [https://fitmanager.com/login](https://fitmanager.com/login)  
-        - Explora nuestras funcionalidades: [https://fitmanager.com/features](https://fitmanager.com/features)  
+    //     Aquí tienes algunos recursos para empezar:  
+    //     - Accede a tu cuenta: [https://fitmanager.com/login](https://fitmanager.com/login)  
+    //     - Explora nuestras funcionalidades: [https://fitmanager.com/features](https://fitmanager.com/features)  
 
-        Si tienes alguna duda, simplemente responde a este correo y nuestro equipo te ayudará.  
+    //     Si tienes alguna duda, simplemente responde a este correo y nuestro equipo te ayudará.  
 
-        Saludos,  
-        El equipo de FitManager  
-        `,
+    //     Saludos,  
+    //     El equipo de FitManager  
+    //     `,
 
-        html: `
-            <p>Hola <strong>${name}</strong>,</p>
-            <p>¡Bienvenido a <strong>FitManager</strong>! Estamos muy contentos de que te hayas unido a nuestra comunidad.</p>
-            <p>Aquí tienes algunos recursos para empezar:</p>
-            <ul>
-            <li>📌 <a href="https://fitmanager.com/login">Accede a tu cuenta</a></li>
-            <li>🚀 <a href="https://fitmanager.com/features">Explora nuestras funcionalidades</a></li>
-            </ul>
-            <p>Si tienes alguna duda, simplemente responde a este correo y nuestro equipo te ayudará.</p>
-            <p>Saludos,<br>El equipo de FitManager</p>
-        `,
-        });
+    //     html: `
+    //         <p>Hola <strong>${name}</strong>,</p>
+    //         <p>¡Bienvenido a <strong>FitManager</strong>! Estamos muy contentos de que te hayas unido a nuestra comunidad.</p>
+    //         <p>Aquí tienes algunos recursos para empezar:</p>
+    //         <ul>
+    //         <li>📌 <a href="https://fitmanager.com/login">Accede a tu cuenta</a></li>
+    //         <li>🚀 <a href="https://fitmanager.com/features">Explora nuestras funcionalidades</a></li>
+    //         </ul>
+    //         <p>Si tienes alguna duda, simplemente responde a este correo y nuestro equipo te ayudará.</p>
+    //         <p>Saludos,<br>El equipo de FitManager</p>
+    //     `,
+    //     });
 
-    }
+    // }
+    async sendWelcomeEmail(to: string, name: string) {
+      await this.mailerService.sendMail({
+          to,
+          subject: `Bienvenido a FitManager, ${name}! 🎉`,
+          template: 'welcome', // Usa la plantilla handlebars
+          context: { name }, // Pasamos el nombre al template
+      });
+  }
 
   // 🎉 2) Enviar promociones al inicio del mes
     async sendMonthlyPromotion(to: string, name: string) {
