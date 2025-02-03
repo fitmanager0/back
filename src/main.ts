@@ -21,9 +21,10 @@ async function bootstrap() {
   app.use(loggerGlobal);
 
   app.enableCors({
+
     allowedHeaders: ['Authorization', 'Content-Type', 'Accept'],
     origin: process.env.CORS_ORIGIN ?? '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+
     credentials: true,
   });
 

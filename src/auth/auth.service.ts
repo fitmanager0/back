@@ -52,25 +52,7 @@ export class AuthService {
       );
     }
 
-    // Crear HealthSheet si no se proporciona uno
-    let healthSheet;
-    if (!user.healthSheetId) {
-      healthSheet = this.healthSheetRepository.create({
-        urlSheet: 'https://res.cloudinary.com/dj0v6zokk', // URL de ejemplo
-      });
-      healthSheet = await this.healthSheetRepository.save(healthSheet);
-    } else {
-      // Buscar HealthSheet usando el campo 'id_sheet'
-      healthSheet = await this.healthSheetRepository.findOne({
-        where: { id_sheet: user.healthSheetId }, // Usamos 'id_sheet' como la clave primaria
-      });
-
-      if (!healthSheet) {
-        throw new BadRequestException(
-          'El HealthSheet proporcionado no existe.',
-        );
-      }
-    }
+    let healthSheet=null;
 
     // Encriptar la contraseña
     const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -132,7 +114,7 @@ export class AuthService {
     if (!user) {
       user = this.usersRepository.create({
         email,
-        name: `${firstName} ${lastName}`,
+        name: `${firstName} ${lastName || ''}`,
         password: '',
         id_rol: 3,
         birthdate: null, // Se pedirá en el frontend
