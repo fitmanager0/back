@@ -21,11 +21,10 @@ async function bootstrap() {
   app.use(loggerGlobal);
 
   app.enableCors({
-    origin: ['http://localhost:3001', 'https://fitmanager-henry.vercel.app'],
-    // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    // credentials: true,
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+
+    allowedHeaders: ['Authorization', 'Content-Type', 'Accept'],
+    origin: process.env.CORS_ORIGIN ?? '*',
+
     credentials: true,
   });
 

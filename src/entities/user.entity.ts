@@ -101,6 +101,16 @@ export class User {
   @Column({ type: 'date', nullable: false })
   entry_date: Date;
 
+
+  @ApiProperty({
+    description: 'Url de la imagen del usuario en su perfil.',
+    example: 'https://res.cloudinary.com/demo/image/upload/v1706623456/sample.jpg',
+  })
+  @Column({ nullable: true }) // Puede ser nulo si el usuario aún no ha subido una imagen
+  imgUrl: string;
+
+
+
   @ApiProperty({ description: 'Hoja de salud relacionada con el usuario' })
   @OneToOne(() => HealthSheet, (healthSheet) => healthSheet.user, {
     cascade: true,

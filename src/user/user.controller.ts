@@ -1,6 +1,6 @@
-import { Controller, Get, Body, Param, Delete, ParseUUIDPipe, Put, UseGuards, Req, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, ParseUUIDPipe, Put, UseGuards, Req, ForbiddenException, UnauthorizedException, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
@@ -8,6 +8,9 @@ import { Role } from 'src/auth/guards/roles.enum';
 import { Request } from 'express';
 import { UpdatePersonalInfoDto } from 'src/dtos/update-personal-info.dto';
 import { UpdateAdminFieldsDto } from 'src/dtos/update-admin-fields.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/config/multer.config';
+import { UploadProfilePictureDto } from 'src/dtos/upload-profile-picture.dto';
 
 declare module 'express' {
   interface Request {
@@ -246,4 +249,49 @@ export class UserController {
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.remove(id);
   }
+
+  @ApiBearerAuth()
+  @Post(':id/profile-picture')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({
+    summary: 'Sube una foto de perfil para un usuario',
+    description: 'Permite que un usuario suba o actualice su foto de perfil. La imagen será validada por tamaño y formato.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID único del usuario al que se le sube la foto de perfil',
+    required: true,
+    type: String,
+  })
+  @ApiConsumes('multipart/form-data') // Especifica que es un archivo multipart
+  @ApiBody({
+    type: UploadProfilePictureDto,  // Usa el DTO para la carga de archivos
+    description: 'Imagen del perfil a cargar',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Foto de perfil subida correctamente.',
+    schema: {
+      example: {
+        message: 'Foto de perfil subida con éxito.',
+        imageUrl: 'https://res.cloudinary.com/your-cloud-name/profile_pictures/image.jpg', // Ejemplo de URL de imagen
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'El tamaño del archivo es demasiado grande o el formato no es permitido.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'El usuario no está autorizado para subir una foto de perfil.',
+  })
+  async uploadProfilePicture(
+    @Param('id') userId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.uploadProfilePicture(userId, file);
+  }
+
 }
