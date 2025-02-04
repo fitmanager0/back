@@ -12,6 +12,7 @@ import { UserModule } from 'src/user/user.module';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { GoogleStrategy } from './google/google.strategy';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { GoogleStrategy } from './google/google.strategy';
       secret: process.env.JWT_SECRET || 'mySuperSecretKey', // Asegúrate de cambiar 'secretKey' por tu clave secreta
       signOptions: { expiresIn: '1h' }, // Opcional: configurar el tiempo de expiración del token
     }),
-    UserModule
+    UserModule,
+    MailModule,
   ],
   providers: [
     AuthService, 

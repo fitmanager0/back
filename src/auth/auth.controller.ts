@@ -148,4 +148,33 @@ export class AuthController {
   // async completeRegistration(@Req() req, @Body() completeUserDto: CompleteUserDto) {
   //   return this.authService.completeRegistration(req.user.email, completeUserDto);
   // }
+
+
+  // @Post('forgot-password')
+  // async forgotPassword(@Body('email') email: string) {
+  //   const user = await this.userService.findByEmail(email);
+  //   if (!user) throw new NotFoundException('Usuario no encontrado');
+
+  //   const token = crypto.randomBytes(32).toString('hex'); // Generar token único
+  //   await this.cacheManager.set(`reset-token-${token}`, user.id_user, { ttl: 3600 });
+
+  //   await this.mailService.sendPasswordResetEmail(user.email, token);
+  //   return { message: 'Correo de recuperación enviado' };
+  // }
+
+  // @Post('reset-password')
+  // async resetPassword(@Body() { token, newPassword }: ResetPasswordDto) {
+  //   const userId = await this.cacheManager.get(`reset-token-${token}`);
+  //   if (!userId) throw new BadRequestException('Token inválido o expirado');
+
+  //   await this.userService.updatePassword(userId, newPassword);
+  //   await this.cacheManager.del(`reset-token-${token}`);
+
+  //   return { message: 'Contraseña actualizada correctamente' };
+  // }
+
+
+
+
+
 }
