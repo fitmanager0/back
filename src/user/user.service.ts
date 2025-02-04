@@ -5,13 +5,16 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UpdatePersonalInfoDto } from 'src/dtos/update-personal-info.dto';
 import { UpdateAdminFieldsDto } from 'src/dtos/update-admin-fields.dto';
+import { CloudinaryConfig } from 'src/config/cloudinary.config';
 
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,  
+    private readonly userRepository: Repository<User>,
+    
+    private readonly cloudinary: CloudinaryConfig,
   ) {}
 
   async findAll() {
@@ -154,4 +157,24 @@ export class UserService {
       message: `El usuario con ID: ${id}, fue eliminado con éxito.` 
     };
   }
+
+
+  async uploadProfilePicture(userId: string, file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('No se recibió ninguna imagen.');
+
+    try {
+      // Subir la imagen a Cloudinary
+      const imageUrl = await this.cloudinary.uploadImage(file);
+
+      // Guardar la URL en la base de datos
+      await this.userRepository.update(userId, { imgUrl: imageUrl });
+
+      return { message: 'Imagen de perfil actualizada con éxito', imageUrl };
+    } catch (error) {
+      throw new BadRequestException('Error al subir la imagen.');
+    }
+  }
+
+
+
 }
