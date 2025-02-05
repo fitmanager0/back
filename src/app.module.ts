@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PaymentModule } from './payment/payment.module';
@@ -22,6 +22,9 @@ import { RoutineSeederModule } from './seeders/seeders.routine.module';
 import { HealthSeederModule } from './seeders/seeder.health.module';
 import { HealthUserSeederService } from './seeders/healthuser.seeder.service';
 import { HealthsheetModule } from './healthsheet/healthsheet.module';
+import { Catalogo } from './entities/catalogo.entity';
+import { CatalogoSeeder } from './seeders/catalogo.seeder';
+import { CatalogoModule } from './catalogo/catologo.module';
 // import { MercadoPagoModule } from './mercadopago/mercadopago.module';
 
 @Module({
@@ -60,7 +63,8 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     RoutineSeederModule,
     RoutinesModule,
     HealthsheetModule,
-    TypeOrmModule.forFeature([
+    CatalogoModule,
+    TypeOrmModule.forFeature([Catalogo,
       User,
       Role,
       Level,
@@ -76,6 +80,14 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
     PayUserSeederService,
     RoutineUserSeederService,
     HealthUserSeederService,
+    CatalogoSeeder,
   ],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly catalogoSeeder: CatalogoSeeder) {}
+
+  async onModuleInit() {
+    await this.catalogoSeeder.seed();
+  }
+}
+
