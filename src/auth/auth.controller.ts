@@ -127,10 +127,12 @@ export class AuthController {
   
 
 
+
     const redirectUrl = `${process.env.NEXT_PUBLIC_API_URL_FRONT}/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`;
     req.res.redirect(redirectUrl);
   }
   }
+
 
   
   // @Public()
