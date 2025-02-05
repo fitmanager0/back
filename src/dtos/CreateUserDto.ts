@@ -128,7 +128,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Estado activo del usuario',
-    example: true,
+    example: false,
   })
   @IsNotEmpty({ message: 'Indique si el usuario está activo.' })
   @IsBoolean({ message: 'El campo Estado debe ser un valor booleano.' })
