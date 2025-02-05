@@ -125,10 +125,10 @@ export class AuthController {
   async googleAuthRedirect(@Req() req) {
     const result = await this.authService.googleLogin(req);
   
-    const redirectUrl = `http://localhost:3001/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`;
+    const redirectUrl = `https://fitmanager-henry.vercel.app/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`;
     req.res.redirect(redirectUrl);
   }
-
+//
   
   // @Public()
   // @Post('complete-registration')
