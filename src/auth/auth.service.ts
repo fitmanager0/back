@@ -67,7 +67,11 @@ export class AuthService {
       id_rol: idRol, // Aquí usamos el valor predeterminado
       password: hashedPassword,
       entry_date: new Date(),
+<<<<<<< HEAD
       isActive: user.isActive ?? false,
+=======
+      isActive: false,//user.isActive ?? true,
+>>>>>>> 3b62fbdb8a58b174255340d3b94a7e2a36f6ae18
       healthSheet: healthSheet, // Asociar el HealthSheet
     };
 
