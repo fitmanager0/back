@@ -36,8 +36,8 @@ export class Comment {
     description: 'Identificador del recurso al que pertenece el comentario',
     example: 123,
   })
-  @Column({ type: 'int', nullable: false })
-  resourceId: number;
+  @Column({ type: 'int', default: 5 })
+  rating: number;
 
   @ApiProperty({
     description: 'Usuario que escribió el comentario',

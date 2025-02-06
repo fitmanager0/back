@@ -18,12 +18,9 @@ export class CommentsService {
     userId: string, // Cambiado a string para coincidir con el UUID
     createCommentDto: CreateCommentDto,
   ): Promise<Comment> {
-    // Utilizamos findOne o findOneBy con el objeto de condición
     const user = await this.userRepository.findOne({
       where: { id_user: userId },
     });
-    // Alternativamente:
-    // const user = await this.userRepository.findOneBy({ id_user: userId });
 
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
@@ -37,10 +34,17 @@ export class CommentsService {
     return this.commentRepository.save(newComment);
   }
 
-  async findByResource(resourceId: number): Promise<Comment[]> {
+  async findByRating(rating: number): Promise<Comment[]> {
     return this.commentRepository.find({
-      where: { resourceId },
-      relations: ['user'], // Incluye la relación con el usuario
+      where: { rating },
+      relations: ['user'], 
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async getAllComments(): Promise<Comment[]> {
+    return this.commentRepository.find({
+      relations: ['user'], 
       order: { createdAt: 'DESC' },
     });
   }
