@@ -10,14 +10,19 @@ export class CommentsController {
 
   @Post(':userId')
   async createComment(
-    @Param('userId') userId: string,  // Cambiado a string
+    @Param('userId') userId: string,
     @Body() createCommentDto: CreateCommentDto,
   ) {
     return this.commentsService.create(userId, createCommentDto);
   }
 
-  @Get('resource/:resourceId')
-  async getCommentsByResource(@Param('resourceId') resourceId: number) {
-    return this.commentsService.findByResource(resourceId);
+  @Get('rating/:rating')
+  async getCommentsByRating(@Param('rating') rating: number) {
+    return this.commentsService.findByRating(rating);
+  }
+
+  @Get()
+  async getAllComments() {
+    return this.commentsService.getAllComments();
   }
 }
