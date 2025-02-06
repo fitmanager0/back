@@ -10,7 +10,7 @@ export class CommentsController {
 
   @Post(':userId')
   async createComment(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,  // Cambiado a string
     @Body() createCommentDto: CreateCommentDto,
   ) {
     return this.commentsService.create(userId, createCommentDto);

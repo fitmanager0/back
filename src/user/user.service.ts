@@ -210,7 +210,7 @@ export class UserService {
 
   async activateUserById(
     userId: string,
-    duration = 30 * 24 * 60 * 60 * 1000,
+    duration = 30 * 24 * 60 * 60 * 1000, // Duración predeterminada: 30 días en ms
   ): Promise<{ message: string }> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -234,29 +234,42 @@ export class UserService {
 
       await queryRunner.commitTransaction();
 
-      setTimeout(async () => {
-        const queryRunner = this.dataSource.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
+      const maxTimeoutMs = 2147483647; // Límite máximo permitido (~24.85 días)
 
-        try {
-          const user = await queryRunner.manager.findOne(User, {
-            where: { id_user: userId },
-            lock: { mode: 'pessimistic_write' },
-          });
+      if (duration > maxTimeoutMs) {
+        // Si la duración supera el límite máximo, usar intervalos
+        const remainingDuration = duration - maxTimeoutMs;
 
-          if (user) {
-            user.isActive = originalStatus;
-            await queryRunner.manager.save(user);
+        setTimeout(async () => {
+          // Llamar a la función nuevamente con el tiempo restante
+          await this.activateUserById(userId, remainingDuration);
+        }, maxTimeoutMs);
+      } else {
+        // Si la duración está dentro del límite, ejecutar directamente
+        setTimeout(async () => {
+          const queryRunner = this.dataSource.createQueryRunner();
+          await queryRunner.connect();
+          await queryRunner.startTransaction();
+
+          try {
+            const user = await queryRunner.manager.findOne(User, {
+              where: { id_user: userId },
+              lock: { mode: 'pessimistic_write' },
+            });
+
+            if (user) {
+              user.isActive = originalStatus;
+              await queryRunner.manager.save(user);
+            }
+
+            await queryRunner.commitTransaction();
+          } catch (error) {
+            await queryRunner.rollbackTransaction();
+          } finally {
+            await queryRunner.release();
           }
-
-          await queryRunner.commitTransaction();
-        } catch (error) {
-          await queryRunner.rollbackTransaction();
-        } finally {
-          await queryRunner.release();
-        }
-      }, duration);
+        }, duration);
+      }
 
       return {
         message: `Usuario ${userId} ha sido activado temporalmente por ${duration / 1000} segundos.`,

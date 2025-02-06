@@ -15,10 +15,15 @@ export class CommentsService {
   ) {}
 
   async create(
-    userId: number,
+    userId: string, // Cambiado a string para coincidir con el UUID
     createCommentDto: CreateCommentDto,
   ): Promise<Comment> {
-    const user = await this.userRepository.findOne(userId);
+    // Utilizamos findOne o findOneBy con el objeto de condición
+    const user = await this.userRepository.findOne({
+      where: { id_user: userId },
+    });
+    // Alternativamente:
+    // const user = await this.userRepository.findOneBy({ id_user: userId });
 
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
