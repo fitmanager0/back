@@ -1,3 +1,4 @@
+// ``` 
 import { Injectable, Logger } from '@nestjs/common';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import type { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create/types';
@@ -6,14 +7,13 @@ import { UserService } from '../../user/user.service';
 @Injectable()
 export class MercadoPagoService {
   private readonly logger = new Logger(MercadoPagoService.name);
-  private readonly frontendURL = 'http://localhost:3001/home';
+  private readonly frontendURL = process.env.NEXT_PUBLIC_API_URL_FRONT || 'https://fitmanager-henry.vercel.app';
   private client: MercadoPagoConfig;
 
   constructor(private readonly userService: UserService) {
     try {
       this.client = new MercadoPagoConfig({
-        accessToken:
-          'APP_USR-3549561525679930-012917-7126929ae757c57e1358abbcf1041373-2238960556',
+        accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-3549561525679930-012917-7126929ae757c57e1358abbcf1041373-2238960556',
       });
       this.logger.log('MercadoPago configurado exitosamente');
     } catch (error: any) {
@@ -31,7 +31,6 @@ export class MercadoPagoService {
       `Creando preferencia para producto: ${JSON.stringify(product)}`,
     );
 
-    // Se usa la estructura que funcionaba, reemplazando solo los datos dinámicos:
     const preferenceData: PreferenceCreateData = {
       body: {
         items: [
@@ -45,17 +44,17 @@ export class MercadoPagoService {
         ],
         auto_return: 'approved',
         back_urls: {
-          success: `http://localhost:3001/dashboard/user/payments/success`,
+          success: `${this.frontendURL}/dashboard/user/payments/success`,
           failure: `${this.frontendURL}?status=failure`,
           pending: `${this.frontendURL}?status=pending`,
         },
         payer: {
-          email: userEmail, // Se usa el email real del usuario
-          name: 'Lalo', // Valor fijo (como en la versión que funcionaba)
-          surname: 'Landa', // Valor fijo
+          email: userEmail,
+          name: 'Lalo',
+          surname: 'Landa',
           identification: {
             type: 'DNI',
-            number: '22333444', // Valor fijo
+            number: '22333444',
           },
         },
         payment_methods: {
@@ -65,7 +64,7 @@ export class MercadoPagoService {
         binary_mode: true,
         expires: false,
         statement_descriptor: 'Tu Empresa',
-        external_reference: userId, // Se usa el ID del usuario aquí
+        external_reference: userId,
       },
     };
 
@@ -98,7 +97,6 @@ export class MercadoPagoService {
 
   async checkPaymentStatus(paymentId: string) {
     try {
-      // Simulación del chequeo del estado del pago
       return { status: 'approved' };
     } catch (error: any) {
       this.logger.error(
