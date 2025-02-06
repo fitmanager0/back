@@ -12,6 +12,7 @@ import { HealthSheet } from './helthsheet.entity';
 import { Payment } from './payments.entity';
 import { Routine } from './routine.entity';
 import { Role } from './roles.entity';
+import { Comment } from './comment.entity';
 
 @Entity('users')
 export class User {
@@ -125,6 +126,10 @@ export class User {
   @ApiProperty({ description: 'Rutinas asociadas al usuario' })
   @OneToMany(() => Routine, (routine) => routine.user)
   routines: Routine[];
+
+  @ApiProperty({ description: 'Comentarios escritos por el usuario' })
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 
   @ApiProperty({ description: 'Rol asociado al usuario, si existe.' })
   @ManyToOne(() => Role, (role) => role.users, {
