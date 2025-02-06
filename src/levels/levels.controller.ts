@@ -7,6 +7,7 @@ import {
   Delete,
   Patch,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { LevelsService } from './levels.service';
 import { CreateLevelDto } from '../dtos/create-level.dto';
@@ -110,7 +111,7 @@ export class LevelsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Nivelde entrenamiento no encontrado.',
+    description: 'Nivel de entrenamiento no encontrado.',
   })
   @ApiResponse({
     status: 401,
@@ -122,8 +123,11 @@ export class LevelsController {
   })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.Coach)
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateLevelDto: UpdateLevelDto) {
+  @Put(':id') // Usamos PUT para actualización completa o parcial
+  async update(
+    @Param('id') id: number,
+    @Body() updateLevelDto: UpdateLevelDto,
+  ) {
     return this.levelsService.update(id, updateLevelDto);
   }
 
