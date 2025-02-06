@@ -57,16 +57,29 @@ export class RoutinesService {
     return this.routineRepository.find({ relations: ['user', 'level'] });
   }
 
-  async findOne(id: string): Promise<Routine> {
+  // async findOne(id: string): Promise<Routine> {
+  //   const routine = await this.routineRepository.findOne({
+  //     where: { id_routine: id },
+  //     relations: ['user', 'level'],
+  //   });
+  //   if (!routine) {
+  //     throw new NotFoundException(`Routine with ID ${id} not found`);
+  //   }
+  //   return routine;
+  // }
+  async findOne(userId: string): Promise<Routine> {
     const routine = await this.routineRepository.findOne({
-      where: { id_routine: id },
-      relations: ['user', 'level'],
+      where: { user: { id_user: userId } }, // Cambiado para buscar por ID de usuario
+      relations: ['user', 'level'],         // Asegúrate de que la relación con 'user' esté configurada en la entidad
     });
+  
     if (!routine) {
-      throw new NotFoundException(`Routine with ID ${id} not found`);
+      throw new NotFoundException(`No se encontró una rutina para el usuario con ID: ${userId}`);
     }
+  
     return routine;
   }
+  
 
   async update(id: string, updateRoutineDto: any): Promise<Routine> {
     await this.findOne(id);

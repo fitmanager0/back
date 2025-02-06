@@ -1,13 +1,32 @@
-import { Body, Controller, Get, Post, Put, Delete, Param, Query, UseGuards, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Query,
+  UseGuards,
+  HttpException,
+  HttpStatus,
+  Logger,
+} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { MercadoPagoService } from './Mp/mercadoPago';
 import { CreatePaymentDto } from '../dtos/create-payment.dto';
 import { UpdatePaymentDto } from '../dtos/update-payment.dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { Role } from 'src/auth/guards/roles.enum';
+import { UserService } from 'src/user/user.service';
 
 @ApiTags('Payments: Gestión de pagos')
 @Controller('payment')
@@ -17,6 +36,7 @@ export class PaymentController {
   constructor(
     private readonly paymentService: PaymentService,
     private readonly mercadoPagoService: MercadoPagoService,
+    private readonly userService: UserService,
   ) {}
 
   @ApiBearerAuth()
@@ -52,37 +72,31 @@ export class PaymentController {
     return this.paymentService.create(createPaymentDto);
   }
 
-  @ApiOperation({
-    summary: 'Crear una preferencia de pago con MercadoPago',
-  })
+  @ApiOperation({ summary: 'Crear una preferencia de pago con MercadoPago' })
   @Post('create-preference')
-  async createPreference(@Body() body: { turno: { service: string; price: number } }) {
-    this.logger.log('Solicitud recibida para crear preferencia:', body);
-
-    if (!body?.turno?.service || !body.turno.price) {
-      this.logger.error('Datos inválidos:', body);
-      throw new HttpException(
-        'Datos inválidos: faltan service o price',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async createPreference(
+    @Body()
+    body: {
+      turno: { service: string; price: number };
+      userId: string;
+      userEmail: string;
+    },
+  ) {
+    this.logger.log('Datos recibidos:', body);
 
     try {
-      const result = await this.mercadoPagoService.createPreference({
-        title: body.turno.service,
-        price: body.turno.price,
-      });
-      this.logger.log('Preferencia creada:', result);
-      return result;  // Esto debe devolver el resultado con id e init_point
-    } catch (error) {
-      this.logger.error('Error al crear preferencia:', error.message);
-      throw new HttpException(
-        `Error al crear preferencia: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+      // Crear la preferencia de pago y retornar el resultado
+      const result = await this.mercadoPagoService.createPreference(
+        { title: body.turno.service, price: body.turno.price },
+        body.userId,
+        body.userEmail,
       );
+      return result;
+    } catch (error: any) {
+      this.logger.error('Error en el proceso de pago:', error.message);
+      throw new Error(`Error en el proceso de pago: ${error.message}`);
     }
   }
-
 
   @ApiBearerAuth()
   @ApiOperation({

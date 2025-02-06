@@ -22,7 +22,7 @@ export class Routine {
     description: 'URL de la rutina',
     example: 'https://example.com/routine1',
   })
-  @Column({ type: 'varchar', length: 100, nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   url_routine: string;
 
   @ApiProperty({

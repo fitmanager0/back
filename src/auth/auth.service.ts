@@ -67,7 +67,7 @@ export class AuthService {
       id_rol: idRol, // Aquí usamos el valor predeterminado
       password: hashedPassword,
       entry_date: new Date(),
-      isActive: user.isActive ?? true,
+      isActive: user.isActive ?? false,
       healthSheet: healthSheet, // Asociar el HealthSheet
     };
 
@@ -128,7 +128,7 @@ export class AuthService {
         city: '',
         country: '',
         entry_date: new Date(),
-        isActive: true,
+        isActive: false,
       });
       await this.usersRepository.save(user);
     }

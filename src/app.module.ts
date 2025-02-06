@@ -25,7 +25,7 @@ import { HealthsheetModule } from './healthsheet/healthsheet.module';
 import { Catalogo } from './entities/catalogo.entity';
 import { CatalogoSeeder } from './seeders/catalogo.seeder';
 import { CatalogoModule } from './catalogo/catologo.module';
-// import { MercadoPagoModule } from './mercadopago/mercadopago.module';
+import { CommentsModule } from './comentarios/comment.module';
 
 @Module({
   imports: [
@@ -64,6 +64,7 @@ import { CatalogoModule } from './catalogo/catologo.module';
     RoutinesModule,
     HealthsheetModule,
     CatalogoModule,
+    CommentsModule,
     TypeOrmModule.forFeature([Catalogo,
       User,
       Role,

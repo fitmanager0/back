@@ -15,15 +15,14 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({ 
-    summary: 'Crea una rutina nueva (ruta protegida para Admin y Coach)', 
-    description: 'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.' 
+    summary: 'Crea una rutina nueva (Usuarios registrados)', 
+    description: 'Esta ruta está protegida, solo los usuarios registrados pueden acceder.' 
   })
   @ApiResponse({ status: 201, description: 'Rutina creada correctamente.' })
   @ApiResponse({ status: 400, description: 'Solicitud incorrecta.' })
   @ApiResponse({ status: 401, description: 'No autorizado.' })
   @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin, Role.Coach)
+  @UseGuards(AuthGuard)
   @Post('/associate')
   associateRoutine(@Body() createRoutineDto: CreateRoutineDto) {
     return this.routinesService.associateRoutine(createRoutineDto);
@@ -45,7 +44,7 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({ 
-    summary: 'Obtener una rutina por ID (ruta protegida)', 
+    summary: 'Obtener una rutina por ID del Socio (ruta protegida)', 
     description: 'Esta ruta está protegida, solo los usuarios autenticados pueden acceder.' 
   })
   @ApiResponse({ status: 200, description: 'Retorna una rutina específica.' })
