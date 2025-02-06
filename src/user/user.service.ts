@@ -210,7 +210,7 @@ export class UserService {
 
   async activateUserById(
     userId: string,
-    duration = 30 * 24 * 60 * 60 * 1000,
+    duration = 20000,
   ): Promise<{ message: string }> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
