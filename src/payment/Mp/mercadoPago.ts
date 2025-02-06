@@ -10,10 +10,20 @@ export class MercadoPagoService {
   private client: MercadoPagoConfig;
 
   constructor(private readonly userService: UserService) {
+    const accessToken = process.env.MP_ACCESS_TOKEN;
+
+    if (!accessToken) {
+      this.logger.error(
+        'El token de acceso de MercadoPago (MP_ACCESS_TOKEN) no está configurado.',
+      );
+      throw new Error(
+        'El token de acceso de MercadoPago no está configurado en las variables de entorno.',
+      );
+    }
+
     try {
       this.client = new MercadoPagoConfig({
-        accessToken:
-          'APP_USR-3549561525679930-012917-7126929ae757c57e1358abbcf1041373-2238960556',
+        accessToken,
       });
       this.logger.log('MercadoPago configurado exitosamente');
     } catch (error: any) {
@@ -31,7 +41,6 @@ export class MercadoPagoService {
       `Creando preferencia para producto: ${JSON.stringify(product)}`,
     );
 
-    // Se usa la estructura que funcionaba, reemplazando solo los datos dinámicos:
     const preferenceData: PreferenceCreateData = {
       body: {
         items: [
@@ -50,12 +59,12 @@ export class MercadoPagoService {
           pending: `${this.frontendURL}?status=pending`,
         },
         payer: {
-          email: userEmail, // Se usa el email real del usuario
-          name: 'Lalo', // Valor fijo (como en la versión que funcionaba)
-          surname: 'Landa', // Valor fijo
+          email: userEmail,
+          name: 'Lalo',
+          surname: 'Landa',
           identification: {
             type: 'DNI',
-            number: '22333444', // Valor fijo
+            number: '22333444',
           },
         },
         payment_methods: {
@@ -65,7 +74,7 @@ export class MercadoPagoService {
         binary_mode: true,
         expires: false,
         statement_descriptor: 'Tu Empresa',
-        external_reference: userId, // Se usa el ID del usuario aquí
+        external_reference: userId,
       },
     };
 
@@ -84,6 +93,7 @@ export class MercadoPagoService {
         this.logger.error('Error al activar el usuario:', error.message);
         throw new Error(`Error al activar el usuario: ${error.message}`);
       }
+
       return {
         id: response.id,
         init_point: response.init_point,
