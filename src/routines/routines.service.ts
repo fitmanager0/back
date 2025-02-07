@@ -5,6 +5,7 @@ import { Routine } from '../entities/routine.entity';
 import { User } from '../entities/user.entity';
 import { Level } from '../entities/level.entity';
 import { CreateRoutineDto } from '../dtos/create-routine.dto';
+import { UpdateRoutineDto } from 'src/dtos/update-routine.dto';
 
 @Injectable()
 export class RoutinesService {
@@ -27,7 +28,9 @@ export class RoutinesService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${createRoutineDto.id_user} not found`);
+      throw new NotFoundException(
+        `User with ID ${createRoutineDto.id_user} not found`,
+      );
     }
 
     // Convertir el id_level de string a number si es necesario
@@ -39,14 +42,16 @@ export class RoutinesService {
     });
 
     if (!level) {
-      throw new NotFoundException(`Level with ID ${createRoutineDto.id_level} not found`);
+      throw new NotFoundException(
+        `Level with ID ${createRoutineDto.id_level} not found`,
+      );
     }
 
     // Crear una nueva rutina asociada al usuario y al nivel
     const newRoutine = this.routineRepository.create({
       url_routine: createRoutineDto.url_routine,
-      user,   // Asociamos el usuario
-      level,  // Asociamos el nivel
+      user, // Asociamos el usuario
+      level, // Asociamos el nivel
     });
 
     // Guardamos la nueva rutina en la base de datos
@@ -70,21 +75,33 @@ export class RoutinesService {
   async findOne(userId: string): Promise<Routine> {
     const routine = await this.routineRepository.findOne({
       where: { user: { id_user: userId } }, // Cambiado para buscar por ID de usuario
-      relations: ['user', 'level'],         // Asegúrate de que la relación con 'user' esté configurada en la entidad
+      relations: ['user', 'level'], // Asegúrate de que la relación con 'user' esté configurada en la entidad
     });
-  
+
     if (!routine) {
-      throw new NotFoundException(`No se encontró una rutina para el usuario con ID: ${userId}`);
+      throw new NotFoundException(
+        `No se encontró una rutina para el usuario con ID: ${userId}`,
+      );
     }
-  
+
     return routine;
   }
-  
 
-  async update(id: string, updateRoutineDto: any): Promise<Routine> {
-    await this.findOne(id);
-    await this.routineRepository.update(id, updateRoutineDto);
-    return this.findOne(id);
+  async update(
+    id: string,
+    updateRoutineDto: UpdateRoutineDto,
+  ): Promise<Routine> {
+    const routine = await this.routineRepository.findOne({
+      where: { id_routine: id },
+      relations: ['user', 'level'],
+    });
+
+    if (!routine) {
+      throw new NotFoundException(`Routine with ID ${id} not found`);
+    }
+
+    Object.assign(routine, updateRoutineDto);
+    return this.routineRepository.save(routine);
   }
 
   async remove(id: string): Promise<void> {

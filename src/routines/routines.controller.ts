@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards, Put } from '@nestjs/common';
 import { RoutinesService } from './routines.service';
 import { CreateRoutineDto } from '../dtos/create-routine.dto';
 import { UpdateRoutineDto } from '../dtos/update-routine.dto';
@@ -68,10 +68,12 @@ export class RoutinesController {
   @ApiResponse({ status: 403, description: 'Acceso prohibido.' })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin, Role.Coach)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto) {
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateRoutineDto: UpdateRoutineDto)
+  {
     return this.routinesService.update(id, updateRoutineDto);
-  }
+  }
+
 
   @ApiBearerAuth()
   @ApiOperation({ 
