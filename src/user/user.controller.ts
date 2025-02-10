@@ -348,9 +348,26 @@ export class UserController {
       throw new UnauthorizedException('Usuario no autenticado.');
     }
     const user = await this.userService.findOne(userId);
-  
+
     console.log('UUID retornado desde /me:', user.id_user); // Log para debugging
     return { id: user.id_user, email: user.email };
   }
-  
+
+  @Post('activate/:id')
+  @ApiOperation({ summary: 'Activar usuario por ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'El usuario ha sido activado exitosamente.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'El ID proporcionado no es válido.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'El usuario no está autorizado para realizar esta acción.',
+  })
+  async activateUserById(@Param('id', ParseUUIDPipe) userId: string) {
+    return this.userService.activateUserById(userId);
+  }
 }
