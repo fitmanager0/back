@@ -26,6 +26,7 @@ import { Catalogo } from './entities/catalogo.entity';
 import { CatalogoSeeder } from './seeders/catalogo.seeder';
 import { CatalogoModule } from './catalogo/catologo.module';
 import { CommentsModule } from './comentarios/comment.module';
+import { ContactUsModule } from './contactus/contactus.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { CommentsModule } from './comentarios/comment.module';
     HealthsheetModule,
     CatalogoModule,
     CommentsModule,
+    ContactUsModule,
     TypeOrmModule.forFeature([Catalogo,
       User,
       Role,

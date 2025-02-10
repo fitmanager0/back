@@ -1,4 +1,3 @@
-// ``` 
 import { Injectable, Logger } from '@nestjs/common';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import type { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create/types';
@@ -7,13 +6,27 @@ import { UserService } from '../../user/user.service';
 @Injectable()
 export class MercadoPagoService {
   private readonly logger = new Logger(MercadoPagoService.name);
-  private readonly frontendURL = process.env.NEXT_PUBLIC_API_URL_FRONT || 'https://fitmanager-henry.vercel.app';
+
+  private readonly successURL = process.env.SUCCESS_PAYMENT_URL || '';
+  private readonly failureURL = process.env.FAILURE_PAYMENT_URL || '';
+  private readonly pendingURL = process.env.PENDING_PAYMENT_URL || '';
+  private readonly frontendURL = process.env.FRONTEND_URL || '';
+
   private client: MercadoPagoConfig;
 
   constructor(private readonly userService: UserService) {
+    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+      this.logger.error(
+        'MERCADOPAGO_ACCESS_TOKEN no está configurado en las variables de entorno.',
+      );
+      throw new Error(
+        'MERCADOPAGO_ACCESS_TOKEN es obligatorio en las variables de entorno.',
+      );
+    }
+
     try {
       this.client = new MercadoPagoConfig({
-        accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || 'APP_USR-3549561525679930-012917-7126929ae757c57e1358abbcf1041373-2238960556',
+        accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
       });
       this.logger.log('MercadoPago configurado exitosamente');
     } catch (error: any) {
@@ -44,9 +57,9 @@ export class MercadoPagoService {
         ],
         auto_return: 'approved',
         back_urls: {
-          success: `${this.frontendURL}/dashboard/user/payments/success`,
-          failure: `${this.frontendURL}?status=failure`,
-          pending: `${this.frontendURL}?status=pending`,
+          success: this.successURL,
+          failure: this.failureURL,
+          pending: this.pendingURL,
         },
         payer: {
           email: userEmail,
@@ -97,7 +110,7 @@ export class MercadoPagoService {
 
   async checkPaymentStatus(paymentId: string) {
     try {
-      return { status: 'approved' };
+      return { status: 'approved' }; // Simulación de estado aprobado
     } catch (error: any) {
       this.logger.error(
         'Error al verificar el estado del pago:',
