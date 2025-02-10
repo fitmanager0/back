@@ -354,6 +354,19 @@ export class UserController {
   }
 
   @Post('activate/:id')
+  @ApiOperation({ summary: 'Activar usuario por ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'El usuario ha sido activado exitosamente.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'El ID proporcionado no es válido.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'El usuario no está autorizado para realizar esta acción.',
+  })
   async activateUserById(@Param('id', ParseUUIDPipe) userId: string) {
     return this.userService.activateUserById(userId);
   }
