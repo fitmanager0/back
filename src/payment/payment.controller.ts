@@ -27,6 +27,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { Role } from 'src/auth/guards/roles.enum';
 import { UserService } from 'src/user/user.service';
+import { MailService } from 'src/mail/mail.service';
 
 @ApiTags('Payments: Gestión de pagos')
 @Controller('payment')
@@ -37,6 +38,7 @@ export class PaymentController {
     private readonly paymentService: PaymentService,
     private readonly mercadoPagoService: MercadoPagoService,
     private readonly userService: UserService,
+    private readonly mailService: MailService
   ) {}
 
   @ApiBearerAuth()
@@ -119,4 +121,19 @@ export class PaymentController {
   remove(@Param('id') id: string) {
     return this.paymentService.remove(id);
   }
+
+
+  
+
+  @Post('test-email-success')
+  async testEmailSuccess(@Body() body: { email: string; name: string; amount: number }) {
+    return this.mailService.sendPaymentSuccessNotification(body.email, body.name, body.amount);
+  }
+
+  @Post('test-email-failure')
+  async testEmailFailure(@Body() body: { email: string; name: string; amount: number; errorMessage: string }) {
+    return this.mailService.sendPaymentFailureNotification(body.email, body.name, body.amount, body.errorMessage);
+  }
+
+
 }
