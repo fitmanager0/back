@@ -24,7 +24,7 @@ export class MailService {
   //   }
   // }
 
-  @Cron('0 21 * * *') // Se ejecuta a las 9 PM todos los días
+  @Cron('20 11 * * *') // Se ejecuta a las 9 PM todos los días
   async sendMonthlyPromotions() {
     const users = await this.userRepository.find(); // Obtener todos los usuarios
     for (const user of users) {
@@ -96,8 +96,8 @@ export class MailService {
     await this.mailerService.sendMail({
       to,
       subject: `¡Pago confirmado, ${name}! ✅`,
-      template: 'payment-success', // Usamos el archivo `payment-success.hbs`
-      context: { name, amount }, // Datos que se reemplazan en el template
+      template: 'payment-success', 
+      context: { name, amount }, 
     });
   }
 
@@ -105,8 +105,8 @@ export class MailService {
     await this.mailerService.sendMail({
       to,
       subject: `Error en tu pago, ${name} ❌`,
-      template: 'payment-failure', // Usamos el archivo `payment-failure.hbs`
-      context: { name, amount, errorMessage }, // Datos dinámicos
+      template: 'payment-failure',
+      context: { name, amount, errorMessage },
     });
   }
 }
