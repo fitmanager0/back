@@ -24,7 +24,7 @@ export class MailService {
   //   }
   // }
 
-  @Cron('20 11 * * *') // Se ejecuta a las 9 PM todos los días
+  @Cron('10 11 * * *') // Se ejecuta a las 9 PM todos los días
   async sendMonthlyPromotions() {
     const users = await this.userRepository.find(); // Obtener todos los usuarios
     for (const user of users) {

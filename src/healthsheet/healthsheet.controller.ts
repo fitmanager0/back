@@ -34,7 +34,7 @@ import {
     }
   
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Obtener una ficha médica por ID' })
+    @ApiOperation({ summary: 'Obtener una ficha médica por ID (Usuarios Registrados).' })
     @ApiResponse({ status: 200, description: 'Retorna una ficha médica específica.' })
     @ApiResponse({ status: 404, description: 'Ficha no encontrada.' })
     @UseGuards(AuthGuard)
@@ -44,7 +44,7 @@ import {
     }
   
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Buscar ficha médica por ID de usuario' })
+    @ApiOperation({ summary: 'Buscar ficha médica por ID de usuario (Usuarios Registrados).' })
     @ApiResponse({ status: 200, description: 'Retorna una ficha médica específica asociada a un usuario.' })
     @ApiResponse({ status: 404, description: 'Ficha no encontrada para el usuario indicado.' })
     @UseGuards(AuthGuard)
@@ -54,7 +54,7 @@ import {
     }
   
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Crear una nueva ficha médica' })
+    @ApiOperation({ summary: 'Crear una nueva ficha médica (Usuarios Registrados).' })
     @ApiResponse({ status: 201, description: 'Ficha médica creada exitosamente.' })
     @ApiResponse({ status: 400, description: 'Solicitud incorrecta.' })
     @UseGuards(AuthGuard)
@@ -64,7 +64,7 @@ import {
     }
   
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Actualizar una ficha médica' })
+    @ApiOperation({ summary: 'Actualizar una ficha médica (Usuarios Registrados).' })
     @ApiResponse({ status: 200, description: 'Ficha médica actualizada exitosamente.' })
     @ApiResponse({ status: 404, description: 'Ficha no encontrada.' })
     @UseGuards(AuthGuard)
@@ -74,7 +74,7 @@ import {
     }
   
     @ApiBearerAuth()
-    @ApiOperation({ summary: 'Eliminar una ficha médica' })
+    @ApiOperation({ summary: 'Eliminar una ficha médica (Usuarios Registrados).' })
     @ApiResponse({ status: 200, description: 'Ficha médica eliminada exitosamente.' })
     @ApiResponse({ status: 404, description: 'Ficha no encontrada.' })
     @UseGuards(AuthGuard)
