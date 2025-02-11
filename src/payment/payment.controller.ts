@@ -27,6 +27,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guards';
 import { Role } from 'src/auth/guards/roles.enum';
 import { UserService } from 'src/user/user.service';
+import { MailService } from 'src/mail/mail.service';
 
 @ApiTags('Payments: Gestión de pagos')
 @Controller('payment')

@@ -15,14 +15,24 @@ export class MailService {
     private readonly userRepository: Repository<User>
 ) {}
 
-  @Cron('0 0 1 * *') // ('*/1 * * * *')Se ejecuta cada minuto (solo para pruebas) //('0 0 1 * *') Se ejecuta el 1° de cada mes a la medianoche
+  // @Cron('0 0 1 * *') // ('*/1 * * * *')Se ejecuta cada minuto (solo para pruebas) //('0 0 1 * *') Se ejecuta el 1° de cada mes a la medianoche
+  // async sendMonthlyPromotions() {
+  //   const users = await this.userRepository.find(); // Obtener todos los usuarios
+  //   for (const user of users) {
+  //     console.log('🔔 Enviando emails de promoción (prueba)...');
+  //     await this.sendMonthlyPromotion(user.email, user.name);
+  //   }
+  // }
+
+  @Cron('10 11 * * *') // Se ejecuta a las 9 PM todos los días
   async sendMonthlyPromotions() {
     const users = await this.userRepository.find(); // Obtener todos los usuarios
     for (const user of users) {
-      console.log('🔔 Enviando emails de promoción (prueba)...');
+      console.log('🔔 Enviando emails de promoción...');
       await this.sendMonthlyPromotion(user.email, user.name);
     }
   }
+
 
   @Cron('0 8 * * *') //('*/1 * * * *') Se ejecuta cada minuto (solo para pruebas)//('0 8 * * *') Se ejecuta cada día a las 8 AM
   async sendBirthdayEmails() {
@@ -79,6 +89,24 @@ export class MailService {
       subject: '¡Ofertas especiales para este mes!',
       template: 'promotion', // Se refiere a "promotion.hbs"
       context: { name },
+    });
+  }
+
+  async sendPaymentSuccessNotification(to: string, name: string, amount: number) {
+    await this.mailerService.sendMail({
+      to,
+      subject: `¡Pago confirmado, ${name}! ✅`,
+      template: 'payment-success', 
+      context: { name, amount }, 
+    });
+  }
+
+  async sendPaymentFailureNotification(to: string, name: string, amount: number, errorMessage: string) {
+    await this.mailerService.sendMail({
+      to,
+      subject: `Error en tu pago, ${name} ❌`,
+      template: 'payment-failure',
+      context: { name, amount, errorMessage },
     });
   }
 }
