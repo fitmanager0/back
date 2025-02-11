@@ -101,7 +101,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Obtener informacion de mi perfil.',
+    summary: 'Obtener informacion de mi perfil (Usuarios Registrados).',
     description:
       'Este endpoint permite que cualquier usuario autenticado vea únicamente su propio perfil.',
   })
@@ -297,7 +297,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
-    summary: 'Sube una foto de perfil para un usuario',
+    summary: 'Sube una foto de perfil para un usuario (Usuarios Registrados).',
     description:
       'Permite que un usuario suba o actualice su foto de perfil. La imagen será validada por tamaño y formato.',
   })

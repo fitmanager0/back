@@ -46,7 +46,7 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Obtener todas las rutinas (ruta protegida)',
+    summary: 'Obtener el catálogo de todas las rutinas (Usuarios Registrados)',
     description:
       'Esta ruta está protegida, solo los usuarios autenticados pueden acceder.',
   })
@@ -61,7 +61,7 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Obtener una rutina por ID del Socio (ruta protegida)',
+    summary: 'Obtener una rutina por ID del Socio (Usuarios Registrados)',
     description:
       'Esta ruta está protegida, solo los usuarios autenticados pueden acceder.',
   })
@@ -77,7 +77,7 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Actualizar una rutina (ruta protegida para Admin y Coach)',
+    summary: 'Actualizar una rutina (Admin y Coach)',
     description:
       'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.',
   })
@@ -96,7 +96,7 @@ export class RoutinesController {
 
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Eliminar una rutina (ruta protegida para Admin y Coach)',
+    summary: 'Eliminar una rutina (Admin y Coach)',
     description:
       'Esta ruta está protegida, solo los usuarios con rol de Admin o Coach pueden acceder.',
   })

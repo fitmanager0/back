@@ -38,7 +38,6 @@ export class PaymentController {
     private readonly paymentService: PaymentService,
     private readonly mercadoPagoService: MercadoPagoService,
     private readonly userService: UserService,
-    private readonly mailService: MailService
   ) {}
 
   @ApiBearerAuth()
@@ -121,19 +120,4 @@ export class PaymentController {
   remove(@Param('id') id: string) {
     return this.paymentService.remove(id);
   }
-
-
-  
-
-  @Post('test-email-success')
-  async testEmailSuccess(@Body() body: { email: string; name: string; amount: number }) {
-    return this.mailService.sendPaymentSuccessNotification(body.email, body.name, body.amount);
-  }
-
-  @Post('test-email-failure')
-  async testEmailFailure(@Body() body: { email: string; name: string; amount: number; errorMessage: string }) {
-    return this.mailService.sendPaymentFailureNotification(body.email, body.name, body.amount, body.errorMessage);
-  }
-
-
 }
