@@ -45,7 +45,7 @@ import { ContactUsModule } from './contactus/contactus.module';
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        dropSchema: true,
+        dropSchema: false,
         synchronize: true, // Solo para desarrollo, no usar en producción
       }),
     }),
